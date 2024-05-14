@@ -21,12 +21,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbarMain))
         supportActionBar?.title = ""
 
-        findViewById<FloatingActionButton>(R.id.addLocationBtn).setOnClickListener{
-            Toast.makeText(this, "Location Add", Toast.LENGTH_SHORT).show()
-            var dialog = AddLocationDialog()
 
-            dialog.show(supportFragmentManager,"Add location")
-        }
 
         // Make toast with net status info
         if (checkAccessToNet(this)) {
@@ -53,6 +48,13 @@ class MainActivity : AppCompatActivity() {
 
         // set weather adapte to recycleview
         recyclerViewWeather.adapter = WeatherAdapter(exampleDataList)
+
+        findViewById<FloatingActionButton>(R.id.addLocationBtn).setOnClickListener{
+            Toast.makeText(this, "Location Add", Toast.LENGTH_SHORT).show()
+            var dialog = AddLocationDialog(exampleDataList)
+
+            dialog.show(supportFragmentManager,"Add location")
+        }
     }
 
     // Function to inflate menu bar options

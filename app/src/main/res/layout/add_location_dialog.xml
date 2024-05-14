@@ -17,10 +17,9 @@
 
     <EditText
         android:id="@+id/location_input"
-        android:layout_width="match_parent"
+        android:layout_width="380dp"
         android:layout_height="50sp"
         android:autofillHints="Insert location"
-        android:inputType="text"
         android:text=""
         app:autoSizeTextType="uniform"
         app:layout_constraintEnd_toEndOf="parent"

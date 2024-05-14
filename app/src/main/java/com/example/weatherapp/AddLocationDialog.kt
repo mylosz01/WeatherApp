@@ -5,10 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 
-class AddLocationDialog : DialogFragment() {
+class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragment() {
 
+    private val itemList = exampleDataList
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -23,7 +25,9 @@ class AddLocationDialog : DialogFragment() {
 
         // add location to list
         rootView.findViewById<Button>(R.id.add_location_button).setOnClickListener{
-
+            val insertLocation = rootView.findViewById<EditText>(R.id.location_input)
+            itemList.add(WeatherModel(insertLocation.text.toString(),"Pochmurnie"))
+            dismiss()
         }
 
         return rootView
