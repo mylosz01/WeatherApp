@@ -23,6 +23,9 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<FloatingActionButton>(R.id.addLocationBtn).setOnClickListener{
             Toast.makeText(this, "Location Add", Toast.LENGTH_SHORT).show()
+            var dialog = AddLocationDialog()
+
+            dialog.show(supportFragmentManager,"Add location")
         }
 
         // Make toast with net status info

@@ -3,4 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="toolbar_bg">#0C82E1</color>
+    <color name="cancel_Btn">#86021C</color>
+    <color name="add_Btn">#0EA003</color>
 </resources>
