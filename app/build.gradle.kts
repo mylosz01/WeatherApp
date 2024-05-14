@@ -39,6 +39,10 @@ dependencies {
 
     //Add gif dependencies
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.28")
+    // Add material dependencies
+    runtimeOnly("com.google.android.material:material:1.12.0")
+    // Add cardView dependencies
+    implementation("androidx.cardview:cardview:1.0.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
