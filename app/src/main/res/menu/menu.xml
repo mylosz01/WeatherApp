@@ -4,9 +4,11 @@
 
     <item
         android:id="@+id/switch_metrics_btn"
-        android:title="Switch metrics"
-        app:actionLayout="@layout/switch_item"
-        app:showAsAction="ifRoom" />
+        android:title="Metrics"
+        app:actionLayout="@layout/switch_metrics"
+        app:actionViewClass="android.widget.ToggleButton"
+        app:showAsAction="ifRoom"
+        android:checkable="true"/>
     <item
         android:id="@+id/refresh_data_btn"
         android:title="Refresh data"
