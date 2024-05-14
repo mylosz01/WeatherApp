@@ -9,6 +9,8 @@
     android:layout_marginStart="10sp"
     android:layout_marginEnd="10sp"
     app:cardElevation="2dp"
+    android:clickable="true"
+    android:focusable="true"
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true">
 
@@ -49,6 +51,18 @@
             android:layout_marginTop="20dp"
             android:layout_toEndOf="@id/img_weather_card_view"
             android:text="jest super pogoda" />
+
+        <ImageButton
+            android:id="@+id/remove_item_Btn"
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:layout_margin="8sp"
+            android:backgroundTint="@color/toolbar_bg"
+            android:background="@drawable/ic_delete"
+            android:layout_alignParentEnd="true"
+            android:text="Remove"
+            android:clickable="true"
+            android:layout_alignParentTop="true"/>
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

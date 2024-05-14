@@ -32,10 +32,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
         }
 
-        // RecycleView for favorite location
-        val recyclerViewWeather = findViewById<RecyclerView>(R.id.favorite_location_RV)
-        recyclerViewWeather.layoutManager =  LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
-
         // example list of weather card array
         val exampleDataList = ArrayList<WeatherModel>()
         exampleDataList.add(WeatherModel("Kraków","Slonecznie"))
@@ -48,9 +44,12 @@ class MainActivity : AppCompatActivity() {
         exampleDataList.add(WeatherModel("Gdańsk","Mglisto"))
         exampleDataList.add(WeatherModel("Wrocław","Deszczowo"))
 
+        // RecycleView for favorite location
+        val recyclerViewWeather = findViewById<RecyclerView>(R.id.favorite_location_RV)
+        recyclerViewWeather.layoutManager =  LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
+
         // set weather adapte to recycleview
-        val weather_adapter_RV = WeatherAdapter(exampleDataList)
-        recyclerViewWeather.adapter = weather_adapter_RV
+        recyclerViewWeather.adapter = WeatherAdapter(exampleDataList)
     }
 
     // Function to inflate menu bar options
