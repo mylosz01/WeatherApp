@@ -3,17 +3,17 @@ package com.example.weatherapp
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.NetManager.Companion.checkAccessToNet
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class MainActivity : AppCompatActivity() {
-
-    private var isChangedMetrics = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,12 +21,36 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbarMain))
         supportActionBar?.title = ""
 
+        findViewById<FloatingActionButton>(R.id.addLocationBtn).setOnClickListener{
+            Toast.makeText(this, "Location Add", Toast.LENGTH_SHORT).show()
+        }
+
         // Make toast with net status info
         if (checkAccessToNet(this)) {
             Toast.makeText(this, "Internet connection !!", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
         }
+
+        // RecycleView for favorite location
+        val recyclerViewWeather = findViewById<RecyclerView>(R.id.favorite_location_RV)
+        recyclerViewWeather.layoutManager =  LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
+
+        // example list of weather card array
+        val exampleDataList = ArrayList<WeatherModel>()
+        exampleDataList.add(WeatherModel("Kraków","Slonecznie"))
+        exampleDataList.add(WeatherModel("Warszawa","Mglisto"))
+        exampleDataList.add(WeatherModel("Łódź","Deszczowo"))
+        exampleDataList.add(WeatherModel("Poznań","Pochmurnie"))
+        exampleDataList.add(WeatherModel("Szczecin","Deszczowo"))
+        exampleDataList.add(WeatherModel("Olsztyn","Slonecznie"))
+        exampleDataList.add(WeatherModel("Zielona Góra","Pochmurnie"))
+        exampleDataList.add(WeatherModel("Gdańsk","Mglisto"))
+        exampleDataList.add(WeatherModel("Wrocław","Deszczowo"))
+
+        // set weather adapte to recycleview
+        val weather_adapter_RV = WeatherAdapter(exampleDataList)
+        recyclerViewWeather.adapter = weather_adapter_RV
     }
 
     // Function to inflate menu bar options
