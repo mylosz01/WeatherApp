@@ -37,6 +37,9 @@ android {
 
 dependencies {
 
+    //Add gif dependencies
+    implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.28")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
