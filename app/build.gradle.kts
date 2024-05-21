@@ -44,6 +44,15 @@ dependencies {
     // Add cardView dependencies
     implementation("androidx.cardview:cardview:1.0.0")
 
+    // Add retrofit dependecies
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    //Gson -> json data to java or kotlin format
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
