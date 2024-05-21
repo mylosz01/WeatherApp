@@ -1,18 +1,16 @@
 package com.example.weatherapp.weatherForecastRV
 
-import java.time.LocalDate
-
 // data class to display forecast weather information in ForecastRV
 data class WeatherForecastModel(
-    private var forecastTimeStamp: LocalDate,
+    private var forecastTimeStamp: String,
     private var forecastImageInt: Int,
     private var forecastTemperature: Double ){
 
-    fun getForecastTimeStamp(): LocalDate{
+    fun getForecastTimeStamp(): String{
         return forecastTimeStamp
     }
 
-    fun setForecastTimeStamp(forecastTimeStamp: LocalDate){
+    fun setForecastTimeStamp(forecastTimeStamp: String){
         this.forecastTimeStamp = forecastTimeStamp
     }
 

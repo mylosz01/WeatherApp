@@ -22,7 +22,7 @@ class WeatherForecastAdapter(private val weatherForecastModelArrayList: ArrayLis
         val model: WeatherForecastModel = weatherForecastModelArrayList[position]
 
         holder.weatherForecastTemperature.text = model.getForecastTemperature().toString()
-        holder.weatherForecastTimeStamp.text =  model.getForecastTimeStamp().toString()
+        holder.weatherForecastTimeStamp.text =  model.getForecastTimeStamp()
     }
 
     //return size of arraylist

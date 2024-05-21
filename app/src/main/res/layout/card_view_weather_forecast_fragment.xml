@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Text View to display time forecast -->
+        <!-- Text View to display timestamp forecast -->
         <TextView
             android:id="@+id/card_view_forecast_time"
             android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:text="Time"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="18sp"
+            android:textSize="10sp"
             android:textStyle="bold" />
 
         <!-- ImageVIew to display weather forecast picture -->
@@ -39,7 +39,7 @@
             android:padding="5dp"
             android:src="@drawable/cloudy_3" />
 
-        <!-- Text View to display location name -->
+        <!-- Text View to display forecast temperature -->
         <TextView
             android:id="@+id/card_view_forecast_temperature"
             android:layout_width="match_parent"
@@ -47,7 +47,7 @@
             android:textAlignment="center"
             android:text="Temperature"
             android:textColor="@color/black"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
     </LinearLayout>
