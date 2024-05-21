@@ -9,8 +9,16 @@ import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.weatherapp.Utils.RetrofitInstance
 import com.example.weatherapp.netMenager.NetManager.Companion.checkAccessToNet
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import retrofit2.Retrofit
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
@@ -51,6 +59,30 @@ class MainActivity : AppCompatActivity() {
             val dialog = AddLocationDialog(exampleDataList)
 
             dialog.show(supportFragmentManager,"Add location")
+        }
+
+        // fetch weather data from api
+
+        getCurrentWeather()
+    }
+
+    private fun getCurrentWeather() {
+        GlobalScope.launch(Dispatchers.IO) {
+            val response = try{
+                RetrofitInstance.api.getCurrentWeatherData("Kraków","metric")
+            }catch (e : IOException){
+                Toast.makeText(applicationContext,"app error", Toast.LENGTH_SHORT).show()
+                return@launch
+            }catch (e: HttpException){
+                Toast.makeText(applicationContext,"http error", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            if(response.isSuccessful && response.body() != null){
+                withContext(Dispatchers.Main){
+                    Log.d("WEATHER INFO","check: ${response.body()!!.main?.humidity}")
+                }
+            }
         }
     }
 
