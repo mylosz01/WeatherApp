@@ -9,12 +9,5 @@ class WeatherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weather)
-
-        val locName: TextView = findViewById(R.id.locationName)
-        val data = intent.getStringExtra("Location")
-        locName.text = data
-
-
-
     }
 }

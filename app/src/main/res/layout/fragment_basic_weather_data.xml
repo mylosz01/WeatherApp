@@ -1,14 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_margin="16sp">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/locationName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Basic Weather Information"
-        android:textSize="18sp" />
+        android:text="Location"
+        android:textAlignment="center"
+        android:textSize="40sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/latitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Latitude:"
+            android:textSize="18sp"
+            android:layout_marginEnd="20sp"/>
+
+        <TextView
+            android:id="@+id/longitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Longitude:"
+            android:textSize="18sp"
+            android:layout_marginStart="20sp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/timeLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Time"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="10sp"/>
+
+    <ImageView
+        android:id="@+id/weather_image"
+        android:layout_width="match_parent"
+        android:layout_height="200sp"
+        android:src="@drawable/cloudy_sunny"
+        android:contentDescription="Picture of weather"/>
+
+    <TextView
+        android:id="@+id/weather_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:layout_marginTop="10sp"
+        android:layout_marginBottom="5sp"/>
+
+    <TextView
+        android:id="@+id/temperature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="25°"
+        android:textAlignment="center"
+        android:textSize="40sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Pressure:"
+            android:textSize="18sp"
+            android:layout_marginStart="20sp"/>
+
+        <TextView
+            android:id="@+id/pressure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Pressure:"
+            android:textSize="18sp"
+            android:layout_marginStart="20sp"/>
+    </LinearLayout>
 
 </LinearLayout>
