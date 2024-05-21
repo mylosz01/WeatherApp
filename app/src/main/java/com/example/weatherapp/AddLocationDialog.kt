@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
+import com.example.weatherapp.WeatherRV.WeatherModel
 
 class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragment() {
 

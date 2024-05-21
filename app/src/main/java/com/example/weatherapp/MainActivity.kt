@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.Utils.RetrofitInstance
+import com.example.weatherapp.WeatherRV.WeatherAdapter
+import com.example.weatherapp.WeatherRV.WeatherModel
 import com.example.weatherapp.netMenager.NetManager.Companion.checkAccessToInternet
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers

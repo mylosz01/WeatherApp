@@ -1,4 +1,4 @@
-package com.example.weatherapp
+package com.example.weatherapp.WeatherRV
 
 // data class to display information in recycleView MainActivity
 data class WeatherModel(

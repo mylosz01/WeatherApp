@@ -1,4 +1,4 @@
-package com.example.weatherapp
+package com.example.weatherapp.WeatherRV
 
 import android.content.Context
 import android.util.Log
@@ -9,6 +9,8 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.weatherapp.MainActivity
+import com.example.weatherapp.R
 
 class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
                      private var clickListener: MainActivity
