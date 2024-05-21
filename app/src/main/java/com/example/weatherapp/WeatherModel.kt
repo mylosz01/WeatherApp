@@ -1,5 +1,6 @@
 package com.example.weatherapp
 
+// data class to display information in recycleView MainActivity
 data class WeatherModel(
     private var locationName: String,
     private var extraInfo: String) {

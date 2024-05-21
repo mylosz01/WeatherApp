@@ -1,5 +1,6 @@
 package com.example.weatherapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -17,10 +18,9 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import retrofit2.Retrofit
 import java.io.IOException
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         recyclerViewWeather.layoutManager =  LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
 
         // set weather adapte to recycleview
-        recyclerViewWeather.adapter = WeatherAdapter(exampleDataList)
+        recyclerViewWeather.adapter = WeatherAdapter(exampleDataList,this)
 
         findViewById<FloatingActionButton>(R.id.addLocationBtn).setOnClickListener{
             Toast.makeText(this, "Location Add", Toast.LENGTH_SHORT).show()
@@ -64,6 +64,10 @@ class MainActivity : AppCompatActivity() {
         // fetch weather data from api
 
         getCurrentWeather()
+    }
+
+    override fun clickedItem(weatherModel: WeatherModel){
+        startActivity(Intent(this,WeatherActivity::class.java))
     }
 
     private fun getCurrentWeather() {
