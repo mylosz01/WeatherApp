@@ -21,8 +21,8 @@ class WeatherForecastAdapter(private val weatherForecastModelArrayList: ArrayLis
     override fun onBindViewHolder(holder: MyForecastViewHolder, position: Int) {
         val model: WeatherForecastModel = weatherForecastModelArrayList[position]
 
-        holder.weatherForecastTemperature.text = model.getForecastTemperature()
-        holder.weatherForecastTimeStamp.text = model.getForecastTimeStamp()
+        holder.weatherForecastTemperature.text = model.getForecastTemperature().toString()
+        holder.weatherForecastTimeStamp.text =  model.getForecastTimeStamp().toString()
     }
 
     //return size of arraylist
