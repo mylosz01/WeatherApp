@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
 
             if(response.isSuccessful && response.body() != null){
                 withContext(Dispatchers.Main){
-                    Log.d("WEATHER INFO","check: ${response.body()!!.main?.humidity}")
+                    Log.d("DEBUG","Temperature: ${response.body()!!.main?.temp}")
                 }
             }
         }
@@ -91,16 +91,18 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu,menu)
 
         val toogleBtn = menu.findItem(R.id.switch_metrics_btn).actionView as ToggleButton
-        toogleBtn.text = "Metryki"
+        toogleBtn.text = "Units"
 
         toogleBtn.setOnCheckedChangeListener{_ , isChecked ->
             if (isChecked){
-                toogleBtn.textOn = "metryka1"
+                toogleBtn.textOn = "Metric"
                 Toast.makeText(this,"Switch the metrics1",Toast.LENGTH_SHORT).show()
+                Log.d("DEBUG","Use metric units")
             }
             else{
-                toogleBtn.textOff = "metryka2"
+                toogleBtn.textOff = "Imperial"
                 Toast.makeText(this,"Switch the metrics2",Toast.LENGTH_SHORT).show()
+                Log.d("DEBUG","Use imperial units")
             }
         }
 
@@ -112,7 +114,7 @@ class MainActivity : AppCompatActivity() {
         // Operate on option in toolbar
         return when (item.itemId) {
             R.id.refresh_data_btn -> {
-                Log.d("CHANGE IN MENU","Refresh the data")
+                Log.d("DEBUG","Refresh the data")
                 Toast.makeText(this,"Refresh the data",Toast.LENGTH_SHORT).show()
                 true
             }

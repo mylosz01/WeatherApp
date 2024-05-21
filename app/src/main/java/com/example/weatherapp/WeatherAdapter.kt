@@ -1,5 +1,6 @@
 package com.example.weatherapp
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,7 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>)
         // click on item to see more information
         holder.weatherView.setOnClickListener{
             Toast.makeText(holder.weatherView.context,"Kliknięto w pozycję numer "+ position,Toast.LENGTH_SHORT).show()
+            Log.d("DEBUG","Kliknieto w pozycje " + position)
         }
         holder.weatherView.findViewById<ImageButton>(R.id.remove_item_Btn).setOnClickListener{
             Toast.makeText(holder.weatherView.context,"Usunięto pozycję numer "+ position,Toast.LENGTH_SHORT).show()
