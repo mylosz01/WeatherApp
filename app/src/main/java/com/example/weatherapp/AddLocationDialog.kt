@@ -26,6 +26,7 @@ class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragme
         // add location to list
         rootView.findViewById<Button>(R.id.add_location_button).setOnClickListener{
             val insertLocation = rootView.findViewById<EditText>(R.id.location_input)
+            // add item to list
             itemList.add(WeatherModel(insertLocation.text.toString(),"Pochmurnie"))
             dismiss()
         }

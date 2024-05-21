@@ -9,9 +9,8 @@ import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.weatherapp.NetManager.Companion.checkAccessToNet
+import com.example.weatherapp.netMenager.NetManager.Companion.checkAccessToNet
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,8 +19,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbarMain))
         supportActionBar?.title = ""
-
-
 
         // Make toast with net status info
         if (checkAccessToNet(this)) {
@@ -51,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<FloatingActionButton>(R.id.addLocationBtn).setOnClickListener{
             Toast.makeText(this, "Location Add", Toast.LENGTH_SHORT).show()
-            var dialog = AddLocationDialog(exampleDataList)
+            val dialog = AddLocationDialog(exampleDataList)
 
             dialog.show(supportFragmentManager,"Add location")
         }

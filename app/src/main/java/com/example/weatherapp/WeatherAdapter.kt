@@ -20,6 +20,7 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>)
         val model: WeatherModel = weatherModelArrayList[position]
         holder.weatherLocation.setText("" + model.getLocationName())
         holder.weatherInfo.setText(model.getExtraInfo())
+        // click on item to see more information
         holder.weatherView.setOnClickListener{
             Toast.makeText(holder.weatherView.context,"Kliknięto w pozycję numer "+ position,Toast.LENGTH_SHORT).show()
         }
