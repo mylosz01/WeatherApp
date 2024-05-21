@@ -1,4 +1,4 @@
-package com.example.weatherapp.WeatherRV
+package com.example.weatherapp.weatherMainRV
 
 import android.content.Context
 import android.util.Log
