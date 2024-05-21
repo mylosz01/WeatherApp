@@ -46,8 +46,11 @@ dependencies {
 
     // Add retrofit dependecies
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    //Gson -> json data to java or kotlin format
+    //retrofit Gson -> json data to java or kotlin format
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Add gson dependencies
+    implementation("com.google.code.gson:gson:2.10.1")
 
     //coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
