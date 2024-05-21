@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.Utils.RetrofitInstance
-import com.example.weatherapp.netMenager.NetManager.Companion.checkAccessToNet
+import com.example.weatherapp.netMenager.NetManager.Companion.checkAccessToInternet
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         supportActionBar?.title = ""
 
         // Make toast with net status info
-        if (checkAccessToNet(this)) {
+        if (checkAccessToInternet(this)) {
             Toast.makeText(this, "Internet connection !!", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
@@ -51,13 +51,12 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         val recyclerViewWeather = findViewById<RecyclerView>(R.id.favorite_location_RV)
         recyclerViewWeather.layoutManager =  LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
 
-        // set weather adapte to recycleview
+        // set weather adapter to recycleview
         recyclerViewWeather.adapter = WeatherAdapter(exampleDataList,this)
 
         findViewById<FloatingActionButton>(R.id.addLocationBtn).setOnClickListener{
             Toast.makeText(this, "Location Add", Toast.LENGTH_SHORT).show()
             val dialog = AddLocationDialog(exampleDataList)
-
             dialog.show(supportFragmentManager,"Add location")
         }
 
@@ -66,10 +65,14 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         getCurrentWeather()
     }
 
+    //function to start weather activity by click on item
     override fun clickedItem(weatherModel: WeatherModel){
-        startActivity(Intent(this,WeatherActivity::class.java))
+        var weatherIntent = Intent(this,WeatherActivity::class.java)
+        weatherIntent.putExtra("Location",weatherModel.getLocationName())
+        startActivity(weatherIntent)
     }
 
+    //fetch weather data from api
     private fun getCurrentWeather() {
         GlobalScope.launch(Dispatchers.IO) {
             val response = try{

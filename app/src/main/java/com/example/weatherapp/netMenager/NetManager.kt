@@ -8,7 +8,7 @@ import android.os.Build
 class NetManager {
 
     companion object {
-        fun checkAccessToNet(context: Context): Boolean {
+        fun checkAccessToInternet(context: Context): Boolean {
             val connectivityManager =
                 context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
