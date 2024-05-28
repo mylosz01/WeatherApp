@@ -13,9 +13,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.weatherapp.Utils.RetrofitInstance
-import com.example.weatherapp.jsonManager.JsonManager
 import com.example.weatherapp.weatherMainRV.WeatherModel
-import com.example.weatherapp.weatherResponseData.CurrentWeatherResponseApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -28,6 +26,7 @@ class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragme
 
     private val itemList = exampleDataList
     private lateinit var adapterAC: ArrayAdapter<String>
+    private lateinit var insertLocationACTV: AutoCompleteTextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +36,7 @@ class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragme
         val rootView: View = inflater.inflate(R.layout.add_location_dialog, container, false)
 
         // get AutoCompleteTextView
-        val insertLocationACTV: AutoCompleteTextView = rootView.findViewById(R.id.location_input)
+        insertLocationACTV = rootView.findViewById(R.id.location_input)
 
         // initialize adapter
         adapterAC = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, listOf())
@@ -70,8 +69,9 @@ class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragme
 
             Log.d("DEBUG","Location name : $fetchData")
 
-            fetchCurrentWeather(cityName = fetchData[0], units = "metric")
+            fetchCurrentWeather(cityName = fetchData[0], units = "metric", latitude = fetchData[2].toDouble(), longitude =  fetchData[3].toDouble())
 
+            adapterAC.notifyDataSetChanged()
             dismiss()
         }
 
@@ -94,7 +94,25 @@ class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragme
             if(response.isSuccessful && response.body() != null){
 
                 withContext(Dispatchers.Main){
-                    Log.d("DEBUG","Tempe tesst: ${response.body()!!.main?.temp}")
+
+
+                    if( response.body()!!.rain?.h == null){
+                        Log.d("DEBUG","nulll h ")
+                    }
+                    else{
+                        Log.d("DEBUG","Tempe tesst: ${response.body()!!.rain?.h!!.toDouble()}")
+                    }
+
+                    // create new WeatherModel object
+                    val weatherModelNew = WeatherModel(locationName = cityName,
+                        descriptionInfo = response.body()!!.weather?.get(0)?.description.toString(),
+                        humidityPercent = response.body()!!.main?.humidity!!.toDouble(),
+                        temperature = response.body()!!.main?.temp!!.toDouble(),
+                        windSpeed = response.body()!!.wind?.speed!!.toDouble()
+                    )
+
+                    // add to list
+                    itemList.add(weatherModelNew)
                 }
             }
         }
