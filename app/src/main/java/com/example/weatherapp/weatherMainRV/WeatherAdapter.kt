@@ -51,7 +51,7 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val weatherLocation: TextView = itemView.findViewById(R.id.card_view_location)
-        val weatherInfo: TextView = itemView.findViewById(R.id.card_view_extra_info)
+        val weatherInfo: TextView = itemView.findViewById(R.id.card_view_description)
         val weatherView = itemView
     }
 

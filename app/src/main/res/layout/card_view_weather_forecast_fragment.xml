@@ -32,7 +32,7 @@
 
         <!-- ImageVIew to display weather forecast picture -->
         <ImageView
-            android:id="@+id/img_weather_card_view"
+            android:id="@+id/card_view_img_weather"
             android:layout_width="100sp"
             android:layout_height="100sp"
             android:contentDescription="Picture of forecast weather"
