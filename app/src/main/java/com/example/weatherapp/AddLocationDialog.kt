@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
@@ -19,6 +21,16 @@ class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragme
     ): View {
         val rootView: View = inflater.inflate(R.layout.add_location_dialog, container, false)
 
+        val cities = listOf("Kraków", "Warszawa", "Gdańsk", "Poznań", "Wrocław", "Łódź", "Szczecin", "Bydgoszcz")
+
+
+        // get AutoCompleteTextView
+        val insertLocationACTV: AutoCompleteTextView = rootView.findViewById(R.id.location_input)
+
+        // set adapter for AutoCompleteTextView
+        val adapterAC = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, cities)
+        insertLocationACTV.setAdapter(adapterAC)
+
         // cancel adding location
         rootView.findViewById<Button>(R.id.cancel_location_button).setOnClickListener{
             dismiss()
@@ -26,9 +38,8 @@ class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragme
 
         // add location to list
         rootView.findViewById<Button>(R.id.add_location_button).setOnClickListener{
-            val insertLocation = rootView.findViewById<EditText>(R.id.location_input)
             // add item to list
-            itemList.add(WeatherModel(insertLocation.text.toString(),"Pochmurnie"))
+            itemList.add(WeatherModel(insertLocationACTV.text.toString(),"Pochmurnie"))
             dismiss()
         }
 
