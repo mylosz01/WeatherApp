@@ -26,8 +26,11 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val model: WeatherModel = weatherModelArrayList[position]
 
-        holder.weatherLocation.setText("" + model.getLocationName())
-        holder.weatherInfo.setText(model.getDescriptionInfo())
+        holder.weatherLocation.text = "" + model.getLocationName()
+        holder.weatherDescription.text = model.getDescriptionInfo()
+        holder.weatherTemperature.text = model.getTemperature().toString() + "°"
+        holder.weatherRainPercent.text = model.getRainPercent().toString() + " %"
+        holder.weatherWindSpeed.text = model.getWindSpeed().toString() + " m/s"
 
         // click on item to see more information
         holder.weatherView.setOnClickListener {
@@ -51,7 +54,10 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val weatherLocation: TextView = itemView.findViewById(R.id.card_view_location)
-        val weatherInfo: TextView = itemView.findViewById(R.id.card_view_description)
+        val weatherDescription: TextView = itemView.findViewById(R.id.card_view_description)
+        val weatherTemperature: TextView = itemView.findViewById(R.id.card_view_temperature)
+        val weatherRainPercent: TextView = itemView.findViewById(R.id.card_view_rain_percent)
+        val weatherWindSpeed: TextView = itemView.findViewById(R.id.card_view_wind_speed)
         val weatherView = itemView
     }
 
