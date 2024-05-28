@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
     private fun getCurrentWeather() {
         GlobalScope.launch(Dispatchers.IO) {
             val response = try{
-                RetrofitInstance.api.getCurrentWeatherData("Kraków","metric")
+                RetrofitInstance.api.getCurrentWeatherData(city = "Kraków", units = "metric")
             }catch (e : IOException){
                 Toast.makeText(applicationContext,"app error", Toast.LENGTH_SHORT).show()
                 return@launch

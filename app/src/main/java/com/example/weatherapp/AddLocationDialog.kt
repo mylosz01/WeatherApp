@@ -10,15 +10,19 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
-import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.weatherapp.Utils.RetrofitInstance
+import com.example.weatherapp.jsonManager.JsonManager
 import com.example.weatherapp.weatherMainRV.WeatherModel
+import com.example.weatherapp.weatherResponseData.CurrentWeatherResponseApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.math.round
+import retrofit2.HttpException
+import java.io.IOException
 
 class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragment() {
 
@@ -43,7 +47,7 @@ class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragme
         insertLocationACTV.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Log.d("DEBUG","On Text Changed Search Location")
+                //Log.d("DEBUG","On Text Changed Search Location")
                 val query = s.toString()
                 if (query.isNotEmpty()) {
                     fetchSuggestions(query)
@@ -60,11 +64,40 @@ class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragme
         // add location to list
         rootView.findViewById<Button>(R.id.add_location_button).setOnClickListener{
             // add item to list
-            itemList.add(WeatherModel(insertLocationACTV.text.toString(),"Pochmurnie"))
+            //itemList.add(WeatherModel(insertLocationACTV.text.toString(),"Pochmurnie"))
+
+            val fetchData = insertLocationACTV.text.split(*arrayOf(",","/"))
+
+            Log.d("DEBUG","Location name : $fetchData")
+
+            fetchCurrentWeather(cityName = fetchData[0], units = "metric")
+
             dismiss()
         }
 
         return rootView
+    }
+
+    // function to fetch current weather data
+    private fun fetchCurrentWeather(cityName: String, units: String = "metric", latitude: Double = 0.0, longitude: Double = 0.0){
+        GlobalScope.launch(Dispatchers.IO) {
+            val response = try{
+                RetrofitInstance.api.getCurrentWeatherData(city = cityName, units = units, latitude = latitude, longitude = longitude)
+            }catch (e : IOException){
+                Toast.makeText(requireContext(),"app error", Toast.LENGTH_SHORT).show()
+                return@launch
+            }catch (e: HttpException){
+                Toast.makeText(requireContext(),"http error", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            if(response.isSuccessful && response.body() != null){
+
+                withContext(Dispatchers.Main){
+                    Log.d("DEBUG","Tempe tesst: ${response.body()!!.main?.temp}")
+                }
+            }
+        }
     }
 
     private fun fetchSuggestions(query: String) {
