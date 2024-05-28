@@ -10,10 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.R
 import com.example.weatherapp.weatherForecastRV.WeatherForecastAdapter
 import com.example.weatherapp.weatherForecastRV.WeatherForecastModel
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 class ForecastWeatherDataFragment : Fragment() {
 
@@ -32,7 +30,7 @@ class ForecastWeatherDataFragment : Fragment() {
         forecastRecycleView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL,false)
 
         val exampleData = ArrayList<WeatherForecastModel>()
-        
+
         //string date
         val dateString = "2024-05-22 00:00:00"
 
@@ -47,6 +45,7 @@ class ForecastWeatherDataFragment : Fragment() {
         //parse date using formatter
         val date = inputDate.format(formatter)
 
+        //add example date
         exampleData.add(WeatherForecastModel(date,1,30.0))
         exampleData.add(WeatherForecastModel(date,2,22.5))
         exampleData.add(WeatherForecastModel(date,2,22.0))
