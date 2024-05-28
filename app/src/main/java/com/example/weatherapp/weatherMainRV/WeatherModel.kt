@@ -4,7 +4,7 @@ import com.example.weatherapp.Utils.Utils
 
 // data class to display information in recycleView MainActivity
 data class WeatherModel(
-    private var imageWeatherId: Int = R.drawable.sun,
+    private var imageWeatherId: Int = R.drawable.rainy,
     private var locationName: String = "-",
     private var descriptionInfo: String = "-",
     private var temperature: Double = 0.0,

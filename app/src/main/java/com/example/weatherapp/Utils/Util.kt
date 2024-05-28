@@ -18,10 +18,10 @@ object Utils {
             in 600..640 -> R.drawable.snowy
             // Atmosphere
             in 700..790 -> R.drawable.cloudy
-            // Clear
-            800 -> R.drawable.sun
             // Clouds
             in 801..810 -> R.drawable.cloudy_3
+            // Clear
+            800 -> R.drawable.sun
             else -> R.drawable.sun
         }
     }

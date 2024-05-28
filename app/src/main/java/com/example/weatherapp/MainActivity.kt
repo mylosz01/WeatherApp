@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.Utils.RetrofitInstance
+import com.example.weatherapp.Utils.Utils
 import com.example.weatherapp.jsonManager.JsonManager
 import com.example.weatherapp.weatherMainRV.WeatherAdapter
 import com.example.weatherapp.weatherMainRV.WeatherModel
@@ -41,9 +42,9 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
         // example list of weather card array
         val exampleDataList = ArrayList<WeatherModel>()
-        exampleDataList.add(WeatherModel("Kraków","Slonecznie"))
-        exampleDataList.add(WeatherModel("Warszawa","Mglisto"))
-        exampleDataList.add(WeatherModel("Łódź","Deszczowo"))
+        exampleDataList.add(WeatherModel(Utils.getWeatherImageResource(800),"Kraków","Slonecznie"))
+        exampleDataList.add(WeatherModel(Utils.getWeatherImageResource(600),"Warszawa","Mglisto"))
+        exampleDataList.add(WeatherModel(Utils.getWeatherImageResource(300),"Łódź","Deszczowo"))
 
         // RecycleView for favorite location
         val recyclerViewWeather = findViewById<RecyclerView>(R.id.favorite_location_RV)
@@ -54,9 +55,14 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
         // floating button for adding new favourite location
         findViewById<FloatingActionButton>(R.id.addLocationBtn).setOnClickListener{
-            Toast.makeText(this, "Location Add", Toast.LENGTH_SHORT).show()
-            val dialog = AddLocationDialog(exampleDataList)
-            dialog.show(supportFragmentManager,"Add location")
+
+            //check if internet connection available
+            if (!checkAccessToInternet(this)) {
+                Toast.makeText(this, "No internet connection to add location", Toast.LENGTH_LONG).show()
+            } else {
+                val dialog = AddLocationDialog(exampleDataList)
+                dialog.show(supportFragmentManager,"Add location")
+            }
         }
 
         // fetch weather data from api

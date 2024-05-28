@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.weatherapp.Utils.RetrofitInstance
+import com.example.weatherapp.Utils.Utils
 import com.example.weatherapp.weatherMainRV.WeatherModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,9 +23,9 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
 
-class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragment() {
+class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogFragment() {
 
-    private val itemList = exampleDataList
+    private val itemList = weatherDataArrayList
     private lateinit var adapterAC: ArrayAdapter<String>
     private lateinit var insertLocationACTV: AutoCompleteTextView
 
@@ -62,13 +63,10 @@ class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragme
 
         // add location to list
         rootView.findViewById<Button>(R.id.add_location_button).setOnClickListener{
-            // add item to list
-            //itemList.add(WeatherModel(insertLocationACTV.text.toString(),"Pochmurnie"))
-
             val fetchData = insertLocationACTV.text.split(*arrayOf(",","/"))
-
             Log.d("DEBUG","Location name : $fetchData")
 
+            // fetching data from api and add new item to list
             fetchCurrentWeather(cityName = fetchData[0], units = "metric", latitude = fetchData[2].toDouble(), longitude =  fetchData[3].toDouble())
 
             adapterAC.notifyDataSetChanged()
@@ -92,19 +90,12 @@ class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragme
             }
 
             if(response.isSuccessful && response.body() != null){
-
                 withContext(Dispatchers.Main){
 
-
-                    if( response.body()!!.rain?.h == null){
-                        Log.d("DEBUG","nulll h ")
-                    }
-                    else{
-                        Log.d("DEBUG","Tempe tesst: ${response.body()!!.rain?.h!!.toDouble()}")
-                    }
-
-                    // create new WeatherModel object
-                    val weatherModelNew = WeatherModel(locationName = cityName,
+                    // create new WeatherModel object and extract weather data
+                    val weatherModelNew = WeatherModel(
+                        imageWeatherId = Utils.getWeatherImageResource(response.body()!!.weather?.get(0)?.id!!.toInt()),
+                        locationName = cityName,
                         descriptionInfo = response.body()!!.weather?.get(0)?.description.toString(),
                         humidityPercent = response.body()!!.main?.humidity!!.toDouble(),
                         temperature = response.body()!!.main?.temp!!.toDouble(),
@@ -113,6 +104,7 @@ class AddLocationDialog(exampleDataList: ArrayList<WeatherModel>) : DialogFragme
 
                     // add to list
                     itemList.add(weatherModelNew)
+                    adapterAC.notifyDataSetChanged()
                 }
             }
         }

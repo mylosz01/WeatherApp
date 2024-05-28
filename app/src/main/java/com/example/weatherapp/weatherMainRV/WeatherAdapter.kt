@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.MainActivity
 import com.example.weatherapp.R
+import com.example.weatherapp.Utils.Utils
 
 class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
                      private var clickListener: MainActivity
@@ -26,6 +28,7 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val model: WeatherModel = weatherModelArrayList[position]
 
+        holder.weatherImage.setImageResource(model.getImageWeather())
         holder.weatherLocation.text = "" + model.getLocationName()
         holder.weatherDescription.text = model.getDescriptionInfo()
         holder.weatherTemperature.text = model.getTemperature().toString() + "°"
@@ -53,6 +56,7 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        val weatherImage: ImageView = itemView.findViewById(R.id.card_view_img_weather)
         val weatherLocation: TextView = itemView.findViewById(R.id.card_view_location)
         val weatherDescription: TextView = itemView.findViewById(R.id.card_view_description)
         val weatherTemperature: TextView = itemView.findViewById(R.id.card_view_temperature)
