@@ -29,7 +29,7 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
         holder.weatherLocation.text = "" + model.getLocationName()
         holder.weatherDescription.text = model.getDescriptionInfo()
         holder.weatherTemperature.text = model.getTemperature().toString() + "°"
-        holder.weatherRainPercent.text = model.getRainPercent().toString() + " %"
+        holder.weatherRainPercent.text = model.getHumidityPercent().toString() + " %"
         holder.weatherWindSpeed.text = model.getWindSpeed().toString() + " m/s"
 
         // click on item to see more information
@@ -56,7 +56,7 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
         val weatherLocation: TextView = itemView.findViewById(R.id.card_view_location)
         val weatherDescription: TextView = itemView.findViewById(R.id.card_view_description)
         val weatherTemperature: TextView = itemView.findViewById(R.id.card_view_temperature)
-        val weatherRainPercent: TextView = itemView.findViewById(R.id.card_view_rain_percent)
+        val weatherRainPercent: TextView = itemView.findViewById(R.id.card_view_humidity_percent)
         val weatherWindSpeed: TextView = itemView.findViewById(R.id.card_view_wind_speed)
         val weatherView = itemView
     }

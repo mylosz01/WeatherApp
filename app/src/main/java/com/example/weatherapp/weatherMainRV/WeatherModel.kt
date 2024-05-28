@@ -5,7 +5,7 @@ data class WeatherModel(
     private var locationName: String = "-",
     private var descriptionInfo: String = "-",
     private var temperature: Double = 0.0,
-    private var rainPercent: Double = 0.0,
+    private var humidityPercent: Double = 0.0,
     private var windSpeed: Double = 0.0) {
 
     fun getLocationName(): String{
@@ -32,12 +32,12 @@ data class WeatherModel(
         this.temperature = temperature
     }
 
-    fun getRainPercent(): Double{
-        return this.rainPercent
+    fun getHumidityPercent(): Double{
+        return this.humidityPercent
     }
 
-    fun setRainPercent(rainPercent: Double){
-        this.rainPercent = rainPercent
+    fun setHumidityPercent(rainPercent: Double){
+        this.humidityPercent = rainPercent
     }
 
     fun getWindSpeed(): Double{

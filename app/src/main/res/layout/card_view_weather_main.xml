@@ -83,11 +83,11 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/umbrella"
+                    android:src="@drawable/humidity"
                     app:tint="@color/black"/>
 
                 <TextView
-                    android:id="@+id/card_view_rain_percent"
+                    android:id="@+id/card_view_humidity_percent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
