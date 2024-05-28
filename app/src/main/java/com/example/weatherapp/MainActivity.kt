@@ -15,6 +15,7 @@ import com.example.weatherapp.jsonManager.JsonManager
 import com.example.weatherapp.weatherMainRV.WeatherAdapter
 import com.example.weatherapp.weatherMainRV.WeatherModel
 import com.example.weatherapp.netMenager.NetManager.Companion.checkAccessToInternet
+import com.example.weatherapp.weatherResponseData.CurrentWeatherResponseApi
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -89,9 +90,13 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
             if(response.isSuccessful && response.body() != null){
                 val weatherData = response.body()!!
-                JsonManager.saveJsonToInternalStorage(applicationContext,weatherData,"weather_data1.json")
+                JsonManager.saveJsonToInternalStorage(applicationContext,weatherData,"weather_data.json")
 
-                JsonManager.deleteFileFromInternalStorage(applicationContext,"weather_data.json")
+                //JsonManager.deleteFileFromInternalStorage(applicationContext,"weather_data.json")
+
+                val readWeatherData : CurrentWeatherResponseApi? = JsonManager.readJsonFromInternalStorage(applicationContext,"weather_data.json")
+
+                Log.d("DEBUG","Read data weather ${readWeatherData!!.main?.temp}")
 
                 withContext(Dispatchers.Main){
                     Log.d("DEBUG","Temperature: ${response.body()!!.main?.temp}")

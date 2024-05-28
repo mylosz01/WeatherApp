@@ -1,10 +1,11 @@
 package com.example.weatherapp.jsonManager
 
 import android.content.Context
-import android.text.BoringLayout
 import android.util.Log
 import com.example.weatherapp.weatherResponseData.CurrentWeatherResponseApi
 import com.google.gson.Gson
+import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 
@@ -27,8 +28,25 @@ object JsonManager {
 
     }
 
-    fun readJsonFromInternalStorage(){
-        
+    fun readJsonFromInternalStorage(context: Context, filename: String): CurrentWeatherResponseApi?{
+        val gson = Gson()
+        return try {
+            val file = File(context.filesDir, filename)
+            if (file.exists()) {
+                val fileInputStream: FileInputStream = context.openFileInput(filename)
+                val inputStreamReader = fileInputStream.bufferedReader()
+                val jsonString = inputStreamReader.use { it.readText() }
+                fileInputStream.close()
+                Log.d("DEBUG", "Read weather data from file $filename")
+                gson.fromJson(jsonString, CurrentWeatherResponseApi::class.java)
+            } else {
+                println("File not found: $filename")
+                null
+            }
+        } catch (e: IOException) {
+            println("Error reading data: ${e.message}")
+            null
+        }
     }
 
     fun deleteFileFromInternalStorage(context: Context, filename: String): Boolean{
