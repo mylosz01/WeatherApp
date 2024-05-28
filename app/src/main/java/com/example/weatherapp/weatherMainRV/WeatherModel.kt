@@ -1,12 +1,23 @@
 package com.example.weatherapp.weatherMainRV
+import com.example.weatherapp.R
+import com.example.weatherapp.Utils.Utils
 
 // data class to display information in recycleView MainActivity
 data class WeatherModel(
+    private var imageWeatherId: Int = R.drawable.sun,
     private var locationName: String = "-",
     private var descriptionInfo: String = "-",
     private var temperature: Double = 0.0,
     private var humidityPercent: Double = 0.0,
     private var windSpeed: Double = 0.0) {
+
+    fun getImageWeather(): Int{
+        return this.imageWeatherId
+    }
+
+    fun setImageWeather(idImage: Int){
+        this.imageWeatherId = Utils.getWeatherImageResource(idImage)
+    }
 
     fun getLocationName(): String{
         return this.locationName
