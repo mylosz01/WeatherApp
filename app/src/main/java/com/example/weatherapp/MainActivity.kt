@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import android.widget.ToggleButton
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +28,8 @@ import java.io.IOException
 
 class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
+    private val weatherViewModel : WeatherViewModel by viewModels<WeatherViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -40,18 +43,18 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
             Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
         }
 
-        // example list of weather card array
+        /*// example list of weather card array
         val exampleDataList = ArrayList<WeatherModel>()
         exampleDataList.add(WeatherModel(Utils.getWeatherImageResource(800),"Kraków","Slonecznie"))
         exampleDataList.add(WeatherModel(Utils.getWeatherImageResource(600),"Warszawa","Mglisto"))
-        exampleDataList.add(WeatherModel(Utils.getWeatherImageResource(300),"Łódź","Deszczowo"))
+        exampleDataList.add(WeatherModel(Utils.getWeatherImageResource(300),"Łódź","Deszczowo"))*/
 
         // RecycleView for favorite location
         val recyclerViewWeather = findViewById<RecyclerView>(R.id.favorite_location_RV)
         recyclerViewWeather.layoutManager =  LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
 
         // set weather adapter to recycleview
-        recyclerViewWeather.adapter = WeatherAdapter(exampleDataList,this)
+        recyclerViewWeather.adapter = WeatherAdapter(weatherViewModel.weatherLocationArray,this)
 
         // floating button for adding new favourite location
         findViewById<FloatingActionButton>(R.id.addLocationBtn).setOnClickListener{
@@ -60,7 +63,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
             if (!checkAccessToInternet(this)) {
                 Toast.makeText(this, "No internet connection to add location", Toast.LENGTH_LONG).show()
             } else {
-                val dialog = AddLocationDialog(exampleDataList)
+                val dialog = AddLocationDialog(weatherViewModel.weatherLocationArray)
                 dialog.show(supportFragmentManager,"Add location")
             }
         }
@@ -71,7 +74,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
     //function to start weather activity by click on item
     override fun clickedItem(weatherModel: WeatherModel){
-        var weatherIntent = Intent(this,WeatherActivity::class.java)
+        val weatherIntent = Intent(this,WeatherActivity::class.java)
         weatherIntent.putExtra("Location",weatherModel.getLocationName())
         startActivity(weatherIntent)
     }
