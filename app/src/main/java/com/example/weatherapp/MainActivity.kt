@@ -44,12 +44,6 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         exampleDataList.add(WeatherModel("Kraków","Slonecznie"))
         exampleDataList.add(WeatherModel("Warszawa","Mglisto"))
         exampleDataList.add(WeatherModel("Łódź","Deszczowo"))
-        exampleDataList.add(WeatherModel("Poznań","Pochmurnie"))
-        exampleDataList.add(WeatherModel("Szczecin","Deszczowo"))
-        exampleDataList.add(WeatherModel("Olsztyn","Slonecznie"))
-        exampleDataList.add(WeatherModel("Zielona Góra","Pochmurnie"))
-        exampleDataList.add(WeatherModel("Gdańsk","Mglisto"))
-        exampleDataList.add(WeatherModel("Wrocław","Deszczowo"))
 
         // RecycleView for favorite location
         val recyclerViewWeather = findViewById<RecyclerView>(R.id.favorite_location_RV)
