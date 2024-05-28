@@ -1,9 +1,9 @@
 package com.example.weatherapp.apiManager
 
+import com.example.weatherapp.CitySuggestion
 import com.example.weatherapp.Utils.Utils
 import com.example.weatherapp.weatherResponseData.CurrentWeatherResponseApi
 import com.example.weatherapp.weatherResponseData.ForecastWeatherResponseApi
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -23,4 +23,11 @@ interface ApiServices {
         @Query("units") units: String,
         @Query("appid") ApiKey: String = Utils.API_KEY,
     ): Response<ForecastWeatherResponseApi>
+
+    @GET("geo/1.0/direct")
+    suspend fun getCitySuggestions(
+        @Query("q") query: String,
+        @Query("limit") limit: Int = 5,
+        @Query("appid") ApiKey: String = Utils.API_KEY,
+    ): Response<List<CitySuggestion>>
 }
