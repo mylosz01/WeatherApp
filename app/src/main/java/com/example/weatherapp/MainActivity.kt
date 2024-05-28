@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         // set weather adapter to recycleview
         recyclerViewWeather.adapter = WeatherAdapter(exampleDataList,this)
 
+        // floating button for adding new favourite location
         findViewById<FloatingActionButton>(R.id.addLocationBtn).setOnClickListener{
             Toast.makeText(this, "Location Add", Toast.LENGTH_SHORT).show()
             val dialog = AddLocationDialog(exampleDataList)

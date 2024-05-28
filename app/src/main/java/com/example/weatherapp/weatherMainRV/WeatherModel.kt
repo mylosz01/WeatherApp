@@ -3,22 +3,49 @@ package com.example.weatherapp.weatherMainRV
 // data class to display information in recycleView MainActivity
 data class WeatherModel(
     private var locationName: String,
-    private var extraInfo: String) {
+    private var descriptionInfo: String,
+    private var temperature: Double,
+    private var rainPercent: Double,
+    private var windSpeed: Double) {
 
     fun getLocationName(): String{
-        return locationName
+        return this.locationName
     }
 
-    fun setLocationName(location_name:String){
-        this.locationName = location_name
+    fun setLocationName(locationName:String){
+        this.locationName = locationName
     }
 
-    fun getExtraInfo(): String{
-        return extraInfo
+    fun getDescriptionInfo(): String{
+        return this.descriptionInfo
     }
 
-    fun setExtraInfo(extra_info:String){
-        this.extraInfo = extra_info
+    fun setDescriptionInfo(descriptionInfo:String){
+        this.descriptionInfo = descriptionInfo
+    }
+
+    fun getTemperature(): Double{
+        return this.temperature
+    }
+
+    fun setTemperature(temperature: Double){
+        this.temperature = temperature
+    }
+
+    fun getRainPercent(): Double{
+        return this.rainPercent
+    }
+
+    fun setRainPercent(rainPercent: Double){
+        this.rainPercent = rainPercent
+    }
+
+    fun getWindSpeed(): Double{
+        return this.windSpeed
+    }
+
+    fun setWindSpeed(windSpeed: Double){
+        this.windSpeed = windSpeed
     }
 
 }

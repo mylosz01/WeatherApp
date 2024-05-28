@@ -27,7 +27,7 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
         val model: WeatherModel = weatherModelArrayList[position]
 
         holder.weatherLocation.setText("" + model.getLocationName())
-        holder.weatherInfo.setText(model.getExtraInfo())
+        holder.weatherInfo.setText(model.getDescriptionInfo())
 
         // click on item to see more information
         holder.weatherView.setOnClickListener {
