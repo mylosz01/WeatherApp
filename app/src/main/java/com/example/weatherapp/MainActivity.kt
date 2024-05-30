@@ -72,8 +72,12 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
     //function to start weather activity by click on item
     override fun clickedItem(weatherModel: WeatherModel){
-        val weatherIntent = Intent(this,WeatherActivity::class.java)
-        weatherIntent.putExtra("LocationFileName",weatherModel.getFilename())
+        val weatherIntent = Intent(this,WeatherActivity::class.java).apply {
+            Log.d("DEBUG", " FILE NAME : ${weatherModel.getFilename()} ")
+            putExtra("LocationData",JsonManager.readJsonFromInternalStorage(applicationContext,weatherModel.getFilename())!!)
+        }
+        /*weatherViewModel._weatherCurrentData.add()
+        weatherIntent.putExtra("LocationFileName",weatherModel.getFilename())*/
         startActivity(weatherIntent)
     }
 
