@@ -1,5 +1,6 @@
 package com.example.weatherapp
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,6 +15,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.weatherapp.Utils.RetrofitInstance
 import com.example.weatherapp.Utils.Utils
+import com.example.weatherapp.jsonManager.JsonManager
 import com.example.weatherapp.weatherMainRV.WeatherModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +30,14 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
     private val itemList = weatherDataArrayList
     private lateinit var adapterAC: ArrayAdapter<String>
     private lateinit var insertLocationACTV: AutoCompleteTextView
+    private lateinit var context: Context
+
+    constructor() : this(ArrayList<WeatherModel>())
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        adapterAC.notifyDataSetChanged()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +54,7 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
         insertLocationACTV.setAdapter(adapterAC)
 
         // set listener to fetch suggestion
-        insertLocationACTV.addTextChangedListener(object : TextWatcher {
+        /*insertLocationACTV.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 //Log.d("DEBUG","On Text Changed Search Location")
@@ -54,7 +64,7 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
                 }
             }
             override fun afterTextChanged(s: Editable?) {}
-        })
+        })*/
 
         // cancel adding location
         rootView.findViewById<Button>(R.id.cancel_location_button).setOnClickListener{
@@ -66,8 +76,20 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
             val fetchData = insertLocationACTV.text.split(*arrayOf(",","/"))
             Log.d("DEBUG","Location name : $fetchData")
 
-            // fetching data from api and add new item to list
-            fetchCurrentWeather(cityName = fetchData[0], units = "metric", latitude = fetchData[2].toDouble(), longitude =  fetchData[3].toDouble())
+            if(fetchData[0].isNotEmpty()) {
+
+                var cityName = fetchData[0]
+                var latitude = 0.0
+                var longitude = 0.0
+
+                if(fetchData.size >= 3) {
+                    latitude = fetchData[2].toDoubleOrNull() ?: 0.0
+                    longitude = fetchData[3].toDoubleOrNull() ?: 0.0
+                }
+
+                // fetching data from api and add new item to list
+                fetchCurrentWeather(cityName = cityName, units = "metric", latitude = latitude, longitude =  longitude, this.context)
+            }
 
             adapterAC.notifyDataSetChanged()
             dismiss()
@@ -77,7 +99,7 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
     }
 
     // function to fetch current weather data
-    private fun fetchCurrentWeather(cityName: String, units: String = "metric", latitude: Double = 0.0, longitude: Double = 0.0){
+    private fun fetchCurrentWeather(cityName: String, units: String = "metric", latitude: Double = 0.0, longitude: Double = 0.0, context: Context){
         GlobalScope.launch(Dispatchers.IO) {
             val response = try{
                 RetrofitInstance.api.getCurrentWeatherData(city = cityName, units = units, latitude = latitude, longitude = longitude)
@@ -88,6 +110,8 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
                 Toast.makeText(requireContext(),"http error", Toast.LENGTH_SHORT).show()
                 return@launch
             }
+
+            Log.d("DEBUG","CHECK RESPONSE: ${response.isSuccessful}")
 
             if(response.isSuccessful && response.body() != null){
                 withContext(Dispatchers.Main){
@@ -101,10 +125,13 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
                         temperature = response.body()!!.main?.temp!!.toDouble(),
                         windSpeed = response.body()!!.wind?.speed!!.toDouble()
                     )
-
                     // add to list
                     itemList.add(weatherModelNew)
+                    Log.d("DEBUG","CITY $cityName added")
                     adapterAC.notifyDataSetChanged()
+
+                    //save current data weather
+                    JsonManager.saveJsonToInternalStorage(context,response.body()!!,"weather_current_${cityName.lowercase()}.json")
                 }
             }
         }
@@ -122,5 +149,9 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
                 }
             }
         }
+    }
+
+    fun attachContext(requireContext: Context = requireContext()) {
+        this.context = requireContext
     }
 }

@@ -9,6 +9,8 @@ import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.Utils.RetrofitInstance
@@ -57,6 +59,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
                 Toast.makeText(this, "No internet connection to add location", Toast.LENGTH_LONG).show()
             } else {
                 val dialog = AddLocationDialog(weatherViewModel.weatherLocationArray)
+                dialog.attachContext(applicationContext)
                 dialog.show(supportFragmentManager,"Add location")
             }
         }
