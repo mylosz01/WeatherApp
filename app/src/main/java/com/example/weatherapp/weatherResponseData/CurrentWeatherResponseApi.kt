@@ -2,6 +2,7 @@ package com.example.weatherapp.weatherResponseData
 
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class CurrentWeatherResponseApi(
     @SerializedName("base")
@@ -32,18 +33,18 @@ data class CurrentWeatherResponseApi(
     val weather: List<Weather?>?,
     @SerializedName("wind")
     val wind: Wind?
-) {
+) : Serializable{
     data class Clouds(
         @SerializedName("all")
         val all: Int?
-    )
+    ) : Serializable
 
     data class Coord(
         @SerializedName("lat")
         val lat: Double?,
         @SerializedName("lon")
         val lon: Double?
-    )
+    ) : Serializable
 
     data class Main(
         @SerializedName("feels_like")
@@ -62,12 +63,12 @@ data class CurrentWeatherResponseApi(
         val tempMax: Double?,
         @SerializedName("temp_min")
         val tempMin: Double?
-    )
+    ) : Serializable
 
     data class Rain(
         @SerializedName("1h")
         val h: Double?
-    )
+    ) : Serializable
 
     data class Sys(
         @SerializedName("country")
@@ -80,7 +81,7 @@ data class CurrentWeatherResponseApi(
         val sunset: Int?,
         @SerializedName("type")
         val type: Int?
-    )
+    ) : Serializable
 
     data class Weather(
         @SerializedName("description")
@@ -91,7 +92,7 @@ data class CurrentWeatherResponseApi(
         val id: Int?,
         @SerializedName("main")
         val main: String?
-    )
+    ) : Serializable
 
     data class Wind(
         @SerializedName("deg")
@@ -100,5 +101,5 @@ data class CurrentWeatherResponseApi(
         val gust: Double?,
         @SerializedName("speed")
         val speed: Double?
-    )
+    ) : Serializable
 }
