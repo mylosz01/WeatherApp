@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
+import java.lang.Exception
 
 class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogFragment() {
 
@@ -78,7 +79,7 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
 
             if(fetchData[0].isNotEmpty()) {
 
-                var cityName = fetchData[0]
+                val cityName = fetchData[0]
                 var latitude = 0.0
                 var longitude = 0.0
 
@@ -115,23 +116,33 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
 
             if(response.isSuccessful && response.body() != null){
                 withContext(Dispatchers.Main){
+                    
+                    try{
+                        val cityCode = response.body()!!.id
+                        val filenameWeather = cityName.lowercase() + cityCode.toString()
 
-                    // create new WeatherModel object and extract weather data
-                    val weatherModelNew = WeatherModel(
-                        imageWeatherId = Utils.getWeatherImageResource(response.body()!!.weather?.get(0)?.id!!.toInt()),
-                        locationName = cityName,
-                        descriptionInfo = response.body()!!.weather?.get(0)?.description.toString(),
-                        humidityPercent = response.body()!!.main?.humidity!!.toDouble(),
-                        temperature = response.body()!!.main?.temp!!.toDouble(),
-                        windSpeed = response.body()!!.wind?.speed!!.toDouble()
-                    )
-                    // add to list
-                    itemList.add(weatherModelNew)
-                    Log.d("DEBUG","CITY $cityName added")
-                    adapterAC.notifyDataSetChanged()
+                        // create new WeatherModel object and extract weather data
+                        val weatherModelNew = WeatherModel(
+                            imageWeatherId = Utils.getWeatherImageResource(response.body()!!.weather?.get(0)?.id!!.toInt()),
+                            locationName = cityName,
+                            descriptionInfo = response.body()!!.weather?.get(0)?.description.toString(),
+                            humidityPercent = response.body()!!.main?.humidity!!.toDouble(),
+                            temperature = response.body()!!.main?.temp!!.toDouble(),
+                            windSpeed = response.body()!!.wind?.speed!!.toDouble(),
+                            filenameLocation = filenameWeather
+                        )
+                        // add to list
+                        itemList.add(weatherModelNew)
+                        Log.d("DEBUG","CITY $cityName added")
+                        adapterAC.notifyDataSetChanged()
 
-                    //save current data weather
-                    JsonManager.saveJsonToInternalStorage(context,response.body()!!,"weather_current_${cityName.lowercase()}.json")
+                        //save current data weather
+                        JsonManager.saveJsonToInternalStorage(context,response.body()!!,"weather_current_${filenameWeather}.json")
+
+                    }
+                    catch (_: Exception){
+                        return@withContext
+                    }
                 }
             }
         }

@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
     //function to start weather activity by click on item
     override fun clickedItem(weatherModel: WeatherModel){
         val weatherIntent = Intent(this,WeatherActivity::class.java)
-        weatherIntent.putExtra("Location",weatherModel.getLocationName())
+        weatherIntent.putExtra("LocationFileName",weatherModel.getFilename())
         startActivity(weatherIntent)
     }
 
