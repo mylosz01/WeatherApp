@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.Utils.RetrofitInstance
-import com.example.weatherapp.Utils.Utils
 import com.example.weatherapp.jsonManager.JsonManager
 import com.example.weatherapp.weatherMainRV.WeatherAdapter
 import com.example.weatherapp.weatherMainRV.WeatherModel
@@ -43,12 +42,6 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
             Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
         }
 
-        /*// example list of weather card array
-        val exampleDataList = ArrayList<WeatherModel>()
-        exampleDataList.add(WeatherModel(Utils.getWeatherImageResource(800),"Kraków","Slonecznie"))
-        exampleDataList.add(WeatherModel(Utils.getWeatherImageResource(600),"Warszawa","Mglisto"))
-        exampleDataList.add(WeatherModel(Utils.getWeatherImageResource(300),"Łódź","Deszczowo"))*/
-
         // RecycleView for favorite location
         val recyclerViewWeather = findViewById<RecyclerView>(R.id.favorite_location_RV)
         recyclerViewWeather.layoutManager =  LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
@@ -68,8 +61,10 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
             }
         }
 
-        // fetch weather data from api
-        getCurrentWeather()
+        // fetch current weather data from api
+        if(checkAccessToInternet(this)){
+            getCurrentWeather()
+        }
     }
 
     //function to start weather activity by click on item
@@ -79,7 +74,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         startActivity(weatherIntent)
     }
 
-    //fetch weather data from api
+    //fetch current weather data from api
     private fun getCurrentWeather() {
         GlobalScope.launch(Dispatchers.IO) {
             val response = try{
