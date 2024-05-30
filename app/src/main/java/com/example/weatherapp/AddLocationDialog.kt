@@ -116,7 +116,7 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
 
             if(response.isSuccessful && response.body() != null){
                 withContext(Dispatchers.Main){
-                    
+
                     try{
                         val cityCode = response.body()!!.id
                         val filenameWeather = cityName.lowercase() + cityCode.toString()
@@ -129,7 +129,7 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
                             humidityPercent = response.body()!!.main?.humidity!!.toDouble(),
                             temperature = response.body()!!.main?.temp!!.toDouble(),
                             windSpeed = response.body()!!.wind?.speed!!.toDouble(),
-                            filenameLocation = filenameWeather
+                            filenameLocation = "weather_current_${filenameWeather}.json"
                         )
                         // add to list
                         itemList.add(weatherModelNew)
