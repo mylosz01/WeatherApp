@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.weatherapp.R
+import com.example.weatherapp.Utils.Utils
 import com.example.weatherapp.weatherResponseData.CurrentWeatherResponseApi
 import java.time.Instant
 import java.time.LocalDateTime
@@ -27,6 +29,9 @@ class BasicWeatherDataFragment : Fragment() {
         if(dataWeather != null){
             //set location name
             view.findViewById<TextView>(R.id.locationName).text = dataWeather.name
+
+            //set image weather
+            view.findViewById<ImageView>(R.id.weather_image).setImageResource(Utils.getWeatherImageResource(dataWeather.weather!!.get(0)?.id!!.toInt()))
 
             //set latitude name
             view.findViewById<TextView>(R.id.latitude).text = "Lat: ${dataWeather.coord!!.lat.toString()}"
