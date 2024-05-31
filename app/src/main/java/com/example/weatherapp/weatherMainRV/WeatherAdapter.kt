@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.MainActivity
 import com.example.weatherapp.R
 import com.example.weatherapp.Utils.Utils
+import com.example.weatherapp.jsonManager.JsonManager
 
 class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
                      private var clickListener: MainActivity
@@ -43,8 +44,12 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
 
         // clickListener to remove item from array
         holder.weatherView.findViewById<ImageButton>(R.id.remove_item_Btn).setOnClickListener{
-            Toast.makeText(holder.weatherView.context,"Usunięto pozycję numer "+ position,Toast.LENGTH_SHORT).show()
+            //Toast.makeText(holder.weatherView.context,"Usunięto pozycję numer "+ position,Toast.LENGTH_SHORT).show()
             Log.d("DEBUG","Usunięto pozycje " + position)
+
+            //remove file with weather data
+            JsonManager.deleteFileFromInternalStorage(context, weatherModelArrayList[position].getFilename())
+
             weatherModelArrayList.removeAt(position)
             notifyDataSetChanged()
         }
