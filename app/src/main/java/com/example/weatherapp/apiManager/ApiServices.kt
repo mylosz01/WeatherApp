@@ -26,6 +26,7 @@ interface ApiServices {
         @Query("lat") latitude: Double = 0.0,
         @Query("lon") longitude: Double = 0.0,
         @Query("cityID") cityID: Int = 0,
+        @Query("cnt") cnt: Int = 0,
         @Query("appid") ApiKey: String = Utils.API_KEY,
     ): Response<ForecastWeatherResponseApi>
 
