@@ -2,7 +2,6 @@ package com.example.weatherapp
 
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.example.weatherapp.weatherResponseData.CurrentWeatherResponseApi
@@ -12,15 +11,13 @@ import com.example.weatherapp.weather_fragments.ForecastWeatherDataFragment
 
 class WeatherActivity : AppCompatActivity() {
 
-    private val weatherViewModel : WeatherViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weather)
 
-        Log.d("DEBUG"," CREATE WEATHER ACTIVITY")
+        //Log.d("DEBUG"," CREATE WEATHER ACTIVITY")
 
-        val weatherCurrentData = intent.getSerializableExtra("LocationData") as? CurrentWeatherResponseApi
+        val weatherCurrentData = intent.getSerializableExtra("CurrentWeatherData") as? CurrentWeatherResponseApi
 
         if(weatherCurrentData == null){
             Log.d("DEBUG","weatherCurrentData null")
@@ -45,7 +42,7 @@ class WeatherActivity : AppCompatActivity() {
             arguments = tempBundle
         }
 
-        Log.d("DEBUG"," testing : ${weatherCurrentData?.id}" )
+        //Log.d("DEBUG"," testing : ${weatherCurrentData?.id}" )
 
         if(savedInstanceState == null){
             supportFragmentManager.commit {

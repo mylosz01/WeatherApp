@@ -2,8 +2,6 @@ package com.example.weatherapp
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -129,7 +127,7 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
                             humidityPercent = response.body()!!.main?.humidity!!.toDouble(),
                             temperature = response.body()!!.main?.temp!!.toDouble(),
                             windSpeed = response.body()!!.wind?.speed!!.toDouble(),
-                            filenameLocation = "weather_current_${filenameWeather}.json"
+                            filenameCurrentWeather = "weather_current_${filenameWeather}.json"
                         )
                         // add to list
                         itemList.add(weatherModelNew)

@@ -35,7 +35,7 @@ class AdvancedWeatherDataFragment : Fragment() {
             view.findViewById<TextView>(R.id.visibility).text = "${dataWeather.visibility} m"
 
             //rotate image
-            view.findViewById<ImageView>(R.id.wind_direction_sign).rotation = dataWeather.wind?.deg!!.toFloat() + 90
+            view.findViewById<ImageView>(R.id.wind_direction_sign).rotation = (dataWeather.wind?.deg!!.toFloat() + 90)
 
             //set wind degree
             view.findViewById<TextView>(R.id.wind_degree).text = "${dataWeather.wind?.deg} °"

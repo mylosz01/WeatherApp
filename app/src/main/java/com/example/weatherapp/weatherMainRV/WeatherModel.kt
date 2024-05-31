@@ -10,10 +10,10 @@ data class WeatherModel(
     private var temperature: Double = 0.0,
     private var humidityPercent: Double = 0.0,
     private var windSpeed: Double = 0.0,
-    private var filenameLocation: String = "") {
+    private var filenameCurrentWeather: String = "") {
 
     fun getFilename():String{
-        return this.filenameLocation
+        return this.filenameCurrentWeather
     }
 
     fun getImageWeather(): Int{
