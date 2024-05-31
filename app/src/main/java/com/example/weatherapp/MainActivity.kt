@@ -71,11 +71,21 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
             weatherAdapter.notifyDataSetChanged()
         }
         else{
+            // read stored weather data
             readFromStorageCurrentWeather()
             weatherAdapter.notifyDataSetChanged()
         }
     }
 
+    //check file in array
+    fun checkFileLocationArray(weatherModelArray : ArrayList<WeatherModel>, checkWeatherFilename : String): Boolean {
+
+        for(weatherEle in weatherModelArray){
+            if(weatherEle.getFilenameCurrentWeather() == checkWeatherFilename)
+                return true
+        }
+        return  false
+    }
 
     //function to start weather activity by click on item
     override fun clickedItem(weatherModel: WeatherModel){
@@ -87,6 +97,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         startActivity(weatherIntent)
     }
 
+    // return list of files with current weather data
     private fun getFileCurrentDataList(): List<String> {
         val fileList = applicationContext.filesDir.listFiles { _, name ->
             name.startsWith("weather_current_") && name.endsWith(".json")
@@ -107,6 +118,10 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
             weatherViewModel.weatherLocationArray.clear()
 
             for(filenameLocation: String in fileListCurrentData){
+
+                // if file currently in array skip
+                if(checkFileLocationArray(weatherViewModel.weatherLocationArray,filenameLocation))
+                    continue
 
                 val readWeatherData : CurrentWeatherResponseApi? = JsonManager.readJsonFromInternalStorageCurrentData(
                     applicationContext,filenameLocation)
@@ -205,6 +220,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         }
     }
 
+    // function to read weather data from json
     private fun readFromStorageCurrentWeather(){
         val fileListCurrentData = getFileCurrentDataList()
         // get file with current data weather
@@ -269,7 +285,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         // Operate on option in toolbar
         return when (item.itemId) {
             R.id.refresh_data_btn -> {
-                Log.d("DEBUG","Refresh the data")
+                //Log.d("DEBUG","Refresh the data")
                 if(checkAccessToInternet(applicationContext)){
                     fetchCurrentWeatherData()
                     weatherAdapter.notifyDataSetChanged()

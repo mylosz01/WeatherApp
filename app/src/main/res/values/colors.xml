@@ -5,4 +5,6 @@
     <color name="toolbar_bg">#0C82E1</color>
     <color name="cancel_Btn">#86021C</color>
     <color name="add_Btn">#0EA003</color>
+    <color name="flaot_add_btn">#2378B1</color>
+
 </resources>
