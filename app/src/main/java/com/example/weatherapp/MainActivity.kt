@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
     companion object{
         private const val PREFS_NAME = "com.example.weatherapp"
         private const val WORKER_STARTED = "worker_started"
+        private const val USER_UNITS = "metric"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -140,12 +141,30 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
     //function to start weather activity by click on item
     override fun clickedItem(weatherModel: WeatherModel){
-        val weatherIntent = Intent(this,WeatherActivity::class.java).apply {
-            Log.d("DEBUG", " FILE NAME : ${weatherModel.getFilenameCurrentWeather()} ")
-            putExtra("CurrentWeatherData",JsonManager.readJsonFromInternalStorageCurrentData(applicationContext,weatherModel.getFilenameCurrentWeather())!!)
-            putExtra("ForecastWeatherData",JsonManager.readJsonFromInternalStorageForecastData(applicationContext,weatherModel.getFilenameForecastWeather())!!)
+
+        try {
+            val weatherIntent = Intent(this, WeatherActivity::class.java).apply {
+                Log.d("DEBUG", " FILE NAME : ${weatherModel.getFilenameCurrentWeather()} ")
+                putExtra(
+                    "CurrentWeatherData",
+                    JsonManager.readJsonFromInternalStorageCurrentData(
+                        applicationContext,
+                        weatherModel.getFilenameCurrentWeather()
+                    )!!
+                )
+                putExtra(
+                    "ForecastWeatherData",
+                    JsonManager.readJsonFromInternalStorageForecastData(
+                        applicationContext,
+                        weatherModel.getFilenameForecastWeather()
+                    )!!
+                )
+            }
+            startActivity(weatherIntent)
         }
-        startActivity(weatherIntent)
+        catch (e: NullPointerException){
+            Log.d("DEBUG","Some error to start intent")
+        }
     }
 
     // return list of files with current weather data
@@ -319,17 +338,22 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         menuInflater.inflate(R.menu.menu,menu)
 
         val toogleBtn = menu.findItem(R.id.switch_metrics_btn).actionView as ToggleButton
-        toogleBtn.text = "Units"
+        toogleBtn.text = "Metric"
+        val sharedPreferences = getSharedPreferences(PREFS_NAME,Context.MODE_PRIVATE)
 
         toogleBtn.setOnCheckedChangeListener{_ , isChecked ->
             if (isChecked){
                 toogleBtn.textOn = "Metric"
-                Toast.makeText(this,"Switch the metrics1",Toast.LENGTH_SHORT).show()
+                // set sharedpref units for metric
+                sharedPreferences.edit().putString(USER_UNITS,"metric").apply()
+                Toast.makeText(this,"Switch units to metric",Toast.LENGTH_SHORT).show()
                 Log.d("DEBUG","Use metric units")
             }
             else{
                 toogleBtn.textOff = "Imperial"
-                Toast.makeText(this,"Switch the metrics2",Toast.LENGTH_SHORT).show()
+                // set sharedpref units for metric
+                sharedPreferences.edit().putString(USER_UNITS,"imperial").apply()
+                Toast.makeText(this,"Switch units to imperial",Toast.LENGTH_SHORT).show()
                 Log.d("DEBUG","Use imperial units")
             }
         }
