@@ -76,13 +76,28 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
             Log.d("DEBUG", " FILE NAME : ${weatherModel.getFilename()} ")
             putExtra("CurrentWeatherData",JsonManager.readJsonFromInternalStorage(applicationContext,weatherModel.getFilename())!!)
         }
-        /*weatherViewModel._weatherCurrentData.add()
-        weatherIntent.putExtra("LocationFileName",weatherModel.getFilename())*/
         startActivity(weatherIntent)
     }
 
-    //fetch current weather data from api
+    private fun getFileCurrentDataList(): List<String> {
+        val fileList = applicationContext.filesDir.listFiles { _, name ->
+            name.startsWith("weather_current_") && name.endsWith(".json")
+        }
+        return fileList?.map { it.name } ?: emptyList()
+    }
+
+    //fetch current weather data from api for location
     private fun getCurrentWeather() {
+
+        val fileListCurrentData = getFileCurrentDataList()
+        // get file with current data weather
+        Log.d("DEBUG","${fileListCurrentData.toMutableList()}")
+
+        // if list is not empty fetch data from weather api
+        if(fileListCurrentData.isNotEmpty()){
+            
+        }
+
         GlobalScope.launch(Dispatchers.IO) {
             val response = try{
                 RetrofitInstance.api.getCurrentWeatherData(city = "Kraków", units = "metric")
@@ -100,9 +115,9 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
                 //JsonManager.deleteFileFromInternalStorage(applicationContext,"weather_data.json")
 
-                val readWeatherData : CurrentWeatherResponseApi? = JsonManager.readJsonFromInternalStorage(applicationContext,"weather_data.json")
+                //val readWeatherData : CurrentWeatherResponseApi? = JsonManager.readJsonFromInternalStorage(applicationContext,"weather_data.json")
 
-                Log.d("DEBUG","Read data weather ${readWeatherData!!.main?.temp}")
+                //Log.d("DEBUG","Read data weather ${readWeatherData!!.main?.temp}")
 
                 withContext(Dispatchers.Main){
                     Log.d("DEBUG","Temperature: ${response.body()!!.main?.temp}")
