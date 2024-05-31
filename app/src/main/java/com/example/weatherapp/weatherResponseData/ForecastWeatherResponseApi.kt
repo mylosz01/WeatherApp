@@ -2,6 +2,7 @@ package com.example.weatherapp.weatherResponseData
 
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class ForecastWeatherResponseApi(
     @SerializedName("city")
@@ -14,7 +15,7 @@ data class ForecastWeatherResponseApi(
     val list: List<Data>?,
     @SerializedName("message")
     val message: Int?
-) {
+) : Serializable {
     data class City(
         @SerializedName("coord")
         val coord: Coord?,
@@ -32,13 +33,13 @@ data class ForecastWeatherResponseApi(
         val sunset: Int?,
         @SerializedName("timezone")
         val timezone: Int?
-    ) {
+    ) : Serializable {
         data class Coord(
             @SerializedName("lat")
             val lat: Double?,
             @SerializedName("lon")
             val lon: Double?
-        )
+        ) : Serializable
     }
 
     data class Data(
@@ -60,11 +61,11 @@ data class ForecastWeatherResponseApi(
         val weather: List<Weather?>?,
         @SerializedName("wind")
         val wind: Wind?
-    ) {
+    ) : Serializable {
         data class Clouds(
             @SerializedName("all")
             val all: Int?
-        )
+        ) : Serializable
 
         data class Main(
             @SerializedName("feels_like")
@@ -85,12 +86,12 @@ data class ForecastWeatherResponseApi(
             val tempMax: Double?,
             @SerializedName("temp_min")
             val tempMin: Double?
-        )
+        ) : Serializable
 
         data class Sys(
             @SerializedName("pod")
             val pod: String?
-        )
+        ) : Serializable
 
         data class Weather(
             @SerializedName("description")
@@ -101,7 +102,7 @@ data class ForecastWeatherResponseApi(
             val id: Int?,
             @SerializedName("main")
             val main: String?
-        )
+        ) : Serializable
 
         data class Wind(
             @SerializedName("deg")
@@ -110,6 +111,6 @@ data class ForecastWeatherResponseApi(
             val gust: Double?,
             @SerializedName("speed")
             val speed: Double?
-        )
+        ) : Serializable
     }
 }

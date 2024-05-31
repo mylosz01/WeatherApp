@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.example.weatherapp.weatherResponseData.CurrentWeatherResponseApi
+import com.example.weatherapp.weatherResponseData.ForecastWeatherResponseApi
 import com.example.weatherapp.weather_fragments.AdvancedWeatherDataFragment
 import com.example.weatherapp.weather_fragments.BasicWeatherDataFragment
 import com.example.weatherapp.weather_fragments.ForecastWeatherDataFragment
@@ -15,9 +16,8 @@ class WeatherActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weather)
 
-        //Log.d("DEBUG"," CREATE WEATHER ACTIVITY")
-
         val weatherCurrentData = intent.getSerializableExtra("CurrentWeatherData") as? CurrentWeatherResponseApi
+        val weatherForecastData = intent.getSerializableExtra("ForecastWeatherData") as? ForecastWeatherResponseApi
 
         if(weatherCurrentData == null){
             Log.d("DEBUG","weatherCurrentData null")
@@ -39,10 +39,10 @@ class WeatherActivity : AppCompatActivity() {
         }
 
         val forecastWeather = ForecastWeatherDataFragment().apply {
-            arguments = tempBundle
+            arguments = Bundle().apply {
+                putSerializable("forecast",weatherForecastData)
+            }
         }
-
-        //Log.d("DEBUG"," testing : ${weatherCurrentData?.id}" )
 
         if(savedInstanceState == null){
             supportFragmentManager.commit {

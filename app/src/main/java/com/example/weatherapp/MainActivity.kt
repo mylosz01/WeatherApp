@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         val weatherIntent = Intent(this,WeatherActivity::class.java).apply {
             Log.d("DEBUG", " FILE NAME : ${weatherModel.getFilenameCurrentWeather()} ")
             putExtra("CurrentWeatherData",JsonManager.readJsonFromInternalStorageCurrentData(applicationContext,weatherModel.getFilenameCurrentWeather())!!)
+            putExtra("ForecastWeatherData",JsonManager.readJsonFromInternalStorageForecastData(applicationContext,weatherModel.getFilenameForecastWeather())!!)
         }
         startActivity(weatherIntent)
     }
@@ -153,7 +154,8 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
                                 city = readWeatherData.name.toString(),
                                 units = "metric",
                                 latitude = readWeatherData.coord.lat.toDouble(),
-                                longitude = readWeatherData.coord.lon.toDouble()
+                                longitude = readWeatherData.coord.lon.toDouble(),
+                                cnt = 10
                             )
                         }catch (e : IOException){
                             Toast.makeText(applicationContext,"app error", Toast.LENGTH_SHORT).show()
@@ -175,6 +177,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
                                 val cityCode = responseCurrent.body()!!.id
                                 val filenameWeather = "${responseCurrent.body()!!.name.toString().lowercase()}${cityCode.toString()}"
 
+                                // create object WeatherModel to store info
                                 val weatherModelNew = WeatherModel(
                                     imageWeatherId = Utils.getWeatherImageResource(responseCurrent.body()!!.weather?.get(0)?.id!!.toInt()),
                                     locationName = responseCurrent.body()!!.name.toString(),
@@ -216,6 +219,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
         // if list is not empty read from storage data
         if(fileListCurrentData.isNotEmpty()){
+
             for(filenameLocation: String in fileListCurrentData){
 
                 val readWeatherData : CurrentWeatherResponseApi? = JsonManager.readJsonFromInternalStorageCurrentData(
@@ -232,7 +236,8 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
                         humidityPercent = readWeatherData.main?.humidity!!.toDouble(),
                         temperature = readWeatherData.main.temp!!.toDouble(),
                         windSpeed = readWeatherData.wind?.speed!!.toDouble(),
-                        filenameCurrentWeather = filenameLocation
+                        filenameCurrentWeather = filenameLocation,
+                        filenameForecastWeather = filenameLocation.replace("current","forecast")
                     )
 
                     // load weatherModel to list

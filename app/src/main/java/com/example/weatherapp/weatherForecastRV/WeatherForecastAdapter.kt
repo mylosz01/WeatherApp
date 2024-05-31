@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.R
@@ -21,8 +22,9 @@ class WeatherForecastAdapter(private val weatherForecastModelArrayList: ArrayLis
     override fun onBindViewHolder(holder: MyForecastViewHolder, position: Int) {
         val model: WeatherForecastModel = weatherForecastModelArrayList[position]
 
-        holder.weatherForecastTemperature.text = model.getForecastTemperature().toString()
+        holder.weatherForecastTemperature.text = "${model.getForecastTemperature()} °C"
         holder.weatherForecastTimeStamp.text =  model.getForecastTimeStamp()
+        holder.weatherForecastImage.setImageResource(model.getForecastImage())
     }
 
     //return size of arraylist
@@ -33,6 +35,7 @@ class WeatherForecastAdapter(private val weatherForecastModelArrayList: ArrayLis
     class MyForecastViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val weatherForecastTimeStamp: TextView = itemView.findViewById(R.id.card_view_forecast_time)
         val weatherForecastTemperature: TextView = itemView.findViewById(R.id.card_view_forecast_temperature)
+        val weatherForecastImage: ImageView = itemView.findViewById(R.id.card_view_img_weather)
         val weatherView = itemView
     }
 }
