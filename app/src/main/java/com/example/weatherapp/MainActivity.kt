@@ -102,6 +102,8 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         // if list is not empty fetch data from weather api
         if(fileListCurrentData.isNotEmpty()){
 
+            weatherViewModel.weatherLocationArray.clear()
+
             for(filenameLocation: String in fileListCurrentData){
 
                 val readWeatherData : CurrentWeatherResponseApi? = JsonManager.readJsonFromInternalStorage(
@@ -227,7 +229,15 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         return when (item.itemId) {
             R.id.refresh_data_btn -> {
                 Log.d("DEBUG","Refresh the data")
-                Toast.makeText(this,"Refresh the data",Toast.LENGTH_SHORT).show()
+                if(checkAccessToInternet(applicationContext)){
+                    fetchCurrentWeatherData()
+                    weatherAdapter.notifyDataSetChanged()
+                    Toast.makeText(this,"Refresh the data",Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    Toast.makeText(this,"Can't refresh data due no connection",Toast.LENGTH_SHORT).show()
+                }
+
                 true
             }
             else -> super.onOptionsItemSelected(item)
