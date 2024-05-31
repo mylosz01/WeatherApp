@@ -1,6 +1,10 @@
 package com.example.weatherapp.Utils
 
 import com.example.weatherapp.R
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 object Utils {
     const val BASE_URL = "https://api.openweathermap.org"
@@ -24,5 +28,12 @@ object Utils {
             800 -> R.drawable.sun
             else -> R.drawable.sun
         }
+    }
+
+    fun convertUnixTimeToDateTime(unixTime: Long): String {
+        val instant = Instant.ofEpochSecond(unixTime)
+        val dateTime = LocalDateTime.ofInstant(instant, ZoneId.of("UTC"))
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
+        return dateTime.format(formatter)
     }
 }

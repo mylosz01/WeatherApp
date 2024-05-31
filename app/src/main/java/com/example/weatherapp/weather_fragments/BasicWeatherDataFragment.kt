@@ -41,7 +41,7 @@ class BasicWeatherDataFragment : Fragment() {
             view.findViewById<TextView>(R.id.longitude).text = "Lon: ${dataWeather.coord.lon.toString()}"
 
             //set location time
-            view.findViewById<TextView>(R.id.timeLocation).text = convertUnixTimeToDateTime(dataWeather.dt!!.toLong())
+            view.findViewById<TextView>(R.id.timeLocation).text = Utils.convertUnixTimeToDateTime(dataWeather.dt!!.toLong())
 
             //set description
             view.findViewById<TextView>(R.id.weather_description).text = dataWeather.weather?.get(0)?.description.toString()
@@ -56,11 +56,6 @@ class BasicWeatherDataFragment : Fragment() {
         return view
     }
 
-    fun convertUnixTimeToDateTime(unixTime: Long): String {
-        val instant = Instant.ofEpochSecond(unixTime)
-        val dateTime = LocalDateTime.ofInstant(instant, ZoneId.of("UTC"))
-        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
-        return dateTime.format(formatter)
-    }
+
 
 }
