@@ -97,6 +97,8 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         val sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val workedStarted = sharedPreferences.getBoolean(WORKER_STARTED,false)
 
+        Log.d("DEBUG","Worker status:  ")
+
         if(!workedStarted) {
             Log.d("DEBUG","START SCHEDULE WORKER")
             scheduleWeatherUpdates(sharedPreferences)
@@ -107,7 +109,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
     //schedule update weather
     private fun scheduleWeatherUpdates(sharedPreferences: SharedPreferences){
         val workRequest = OneTimeWorkRequestBuilder<WeatherWorker>()
-            .setInitialDelay(20,TimeUnit.SECONDS)
+            .setInitialDelay(10,TimeUnit.MINUTES)
             .build()
 
         WorkManager.getInstance(this).enqueueUniqueWork(
