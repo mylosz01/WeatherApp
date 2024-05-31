@@ -9,11 +9,10 @@ import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.Utils.RetrofitInstance
+import com.example.weatherapp.Utils.Utils
 import com.example.weatherapp.jsonManager.JsonManager
 import com.example.weatherapp.weatherMainRV.WeatherAdapter
 import com.example.weatherapp.weatherMainRV.WeatherModel
@@ -30,6 +29,7 @@ import java.io.IOException
 class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
     private val weatherViewModel : WeatherViewModel by viewModels<WeatherViewModel>()
+    private lateinit var weatherAdapter: WeatherAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
         // set weather adapter to recycleview
         recyclerViewWeather.adapter = WeatherAdapter(weatherViewModel.weatherLocationArray,this)
+        weatherAdapter = recyclerViewWeather.adapter as WeatherAdapter
 
         // floating button for adding new favourite location
         findViewById<FloatingActionButton>(R.id.addLocationBtn).setOnClickListener{
@@ -66,7 +67,8 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
         // fetch current weather data from api
         if(checkAccessToInternet(this)){
-            getCurrentWeather()
+            fetchCurrentWeatherData()
+            weatherAdapter.notifyDataSetChanged()
         }
     }
 
@@ -87,7 +89,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
     }
 
     //fetch current weather data from api for location
-    private fun getCurrentWeather() {
+    private fun fetchCurrentWeatherData() {
 
         val fileListCurrentData = getFileCurrentDataList()
         // get file with current data weather
@@ -95,32 +97,64 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
         // if list is not empty fetch data from weather api
         if(fileListCurrentData.isNotEmpty()){
-            
-        }
 
-        GlobalScope.launch(Dispatchers.IO) {
-            val response = try{
-                RetrofitInstance.api.getCurrentWeatherData(city = "Kraków", units = "metric")
-            }catch (e : IOException){
-                Toast.makeText(applicationContext,"app error", Toast.LENGTH_SHORT).show()
-                return@launch
-            }catch (e: HttpException){
-                Toast.makeText(applicationContext,"http error", Toast.LENGTH_SHORT).show()
-                return@launch
-            }
+            for(filenameLocation: String in fileListCurrentData){
 
-            if(response.isSuccessful && response.body() != null){
-                val weatherData = response.body()!!
-                JsonManager.saveJsonToInternalStorage(applicationContext,weatherData,"weather_data.json")
+                val readWeatherData : CurrentWeatherResponseApi? = JsonManager.readJsonFromInternalStorage(
+                    applicationContext,filenameLocation)
 
-                //JsonManager.deleteFileFromInternalStorage(applicationContext,"weather_data.json")
+                // delete old data
+                JsonManager.deleteFileFromInternalStorage(
+                    context = applicationContext,
+                    filename = filenameLocation)
 
-                //val readWeatherData : CurrentWeatherResponseApi? = JsonManager.readJsonFromInternalStorage(applicationContext,"weather_data.json")
+                if(readWeatherData != null){
 
-                //Log.d("DEBUG","Read data weather ${readWeatherData!!.main?.temp}")
+                    GlobalScope.launch(Dispatchers.IO) {
+                        val response = try{
+                            RetrofitInstance.api.getCurrentWeatherData(
+                                city = readWeatherData.name.toString(),
+                                units = "metric",
+                                latitude = readWeatherData.coord?.lat!!.toDouble(),
+                                longitude = readWeatherData.coord.lon!!.toDouble()
+                            )
+                        }catch (e : IOException){
+                            Toast.makeText(applicationContext,"app error", Toast.LENGTH_SHORT).show()
+                            return@launch
+                        }catch (e: HttpException){
+                            Toast.makeText(applicationContext,"http error", Toast.LENGTH_SHORT).show()
+                            return@launch
+                        }
 
-                withContext(Dispatchers.Main){
-                    Log.d("DEBUG","Temperature: ${response.body()!!.main?.temp}")
+                        if(response.isSuccessful && response.body() != null){
+                            withContext(Dispatchers.Main){
+                                Log.d("DEBUG","CREATE WEATHER MODEL")
+
+                                val cityCode = response.body()!!.id
+                                val filenameWeather = "${response.body()!!.name.toString().lowercase()}${cityCode.toString()}"
+
+                                val weatherModelNew = WeatherModel(
+                                    imageWeatherId = Utils.getWeatherImageResource(response.body()!!.weather?.get(0)?.id!!.toInt()),
+                                    locationName = response.body()!!.name.toString(),
+                                    descriptionInfo = response.body()!!.weather?.get(0)?.description.toString(),
+                                    humidityPercent = response.body()!!.main?.humidity!!.toDouble(),
+                                    temperature = response.body()!!.main?.temp!!.toDouble(),
+                                    windSpeed = response.body()!!.wind?.speed!!.toDouble(),
+                                    filenameCurrentWeather = "weather_current_${filenameWeather}.json"
+                                )
+
+                                // load weatherModel to list
+                                weatherViewModel.weatherLocationArray.add(weatherModelNew)
+                                weatherAdapter.notifyDataSetChanged()
+
+                                //save fresh data
+                                JsonManager.saveJsonToInternalStorage(
+                                    context = applicationContext,
+                                    dataWeather = readWeatherData,
+                                    filename = weatherModelNew.getFilename())
+                            }
+                        }
+                    }
                 }
             }
         }
