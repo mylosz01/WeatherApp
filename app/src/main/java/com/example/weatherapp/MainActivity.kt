@@ -94,13 +94,6 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         return fileList?.map { it.name } ?: emptyList()
     }
 
-    private fun getFileForecastDataList(): List<String> {
-        val fileList = applicationContext.filesDir.listFiles { _, name ->
-            name.startsWith("weather_forecast_") && name.endsWith(".json")
-        }
-        return fileList?.map { it.name } ?: emptyList()
-    }
-
     //fetch current weather data from api for location
     private fun fetchCurrentWeatherData() {
 

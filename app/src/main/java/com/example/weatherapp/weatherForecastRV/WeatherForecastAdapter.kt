@@ -36,6 +36,5 @@ class WeatherForecastAdapter(private val weatherForecastModelArrayList: ArrayLis
         val weatherForecastTimeStamp: TextView = itemView.findViewById(R.id.card_view_forecast_time)
         val weatherForecastTemperature: TextView = itemView.findViewById(R.id.card_view_forecast_temperature)
         val weatherForecastImage: ImageView = itemView.findViewById(R.id.card_view_img_weather)
-        val weatherView = itemView
     }
 }
