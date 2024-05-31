@@ -8,11 +8,9 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.MainActivity
 import com.example.weatherapp.R
-import com.example.weatherapp.Utils.Utils
 import com.example.weatherapp.jsonManager.JsonManager
 
 class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
@@ -48,7 +46,7 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
             Log.d("DEBUG","Usunięto pozycje " + position)
 
             //remove file with weather data
-            JsonManager.deleteFileFromInternalStorage(context, weatherModelArrayList[position].getFilename())
+            JsonManager.deleteFileFromInternalStorage(context, weatherModelArrayList[position].getFilenameCurrentWeather())
 
             weatherModelArrayList.removeAt(position)
             notifyDataSetChanged()

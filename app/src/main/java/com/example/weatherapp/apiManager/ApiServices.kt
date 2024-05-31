@@ -22,7 +22,10 @@ interface ApiServices {
     @GET("/data/2.5/forecast?")
     suspend fun getForecastWeatherData(
         @Query("q") city: String,
-        @Query("units") units: String,
+        @Query("units") units: String = "metric",
+        @Query("lat") latitude: Double = 0.0,
+        @Query("lon") longitude: Double = 0.0,
+        @Query("cityID") cityID: Int = 0,
         @Query("appid") ApiKey: String = Utils.API_KEY,
     ): Response<ForecastWeatherResponseApi>
 

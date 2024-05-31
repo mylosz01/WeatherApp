@@ -21,7 +21,7 @@ object JsonManager {
             val fileOutputStream: FileOutputStream = context.openFileOutput(filename, Context.MODE_PRIVATE)
             fileOutputStream.write(jsonString.toByteArray())
             fileOutputStream.close()
-            Log.d("DEBUG","JSON saved to $filename")
+            Log.d("DEBUG","JSON Saved current to $filename")
         }
         catch (e: IOException){
             Log.d("DEBUG","Error saving JSON : ${e.message}")
@@ -37,7 +37,7 @@ object JsonManager {
                 val inputStreamReader = fileInputStream.bufferedReader()
                 val jsonString = inputStreamReader.use { it.readText() }
                 fileInputStream.close()
-                Log.d("DEBUG", "Read weather data from file $filename")
+                Log.d("DEBUG", "JSON Read current from file $filename")
                 gson.fromJson(jsonString, CurrentWeatherResponseApi::class.java)
             } else {
                 println("File not found: $filename")
@@ -58,7 +58,7 @@ object JsonManager {
             val fileOutputStream: FileOutputStream = context.openFileOutput(filename, Context.MODE_PRIVATE)
             fileOutputStream.write(jsonString.toByteArray())
             fileOutputStream.close()
-            Log.d("DEBUG","JSON saved to $filename")
+            Log.d("DEBUG","JSON Saved forecast to $filename")
         }
         catch (e: IOException){
             Log.d("DEBUG","Error saving JSON : ${e.message}")
@@ -74,7 +74,7 @@ object JsonManager {
                 val inputStreamReader = fileInputStream.bufferedReader()
                 val jsonString = inputStreamReader.use { it.readText() }
                 fileInputStream.close()
-                Log.d("DEBUG", "Read weather data from file $filename")
+                Log.d("DEBUG", "JSON Read from file $filename")
                 gson.fromJson(jsonString, ForecastWeatherResponseApi::class.java)
             } else {
                 println("File not found: $filename")
