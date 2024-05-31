@@ -45,8 +45,9 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
             //Toast.makeText(holder.weatherView.context,"Usunięto pozycję numer "+ position,Toast.LENGTH_SHORT).show()
             Log.d("DEBUG","Usunięto pozycje " + position)
 
-            //remove file with weather data
+            //remove file with current and forecast weather data
             JsonManager.deleteFileFromInternalStorage(context, weatherModelArrayList[position].getFilenameCurrentWeather())
+            JsonManager.deleteFileFromInternalStorage(context, weatherModelArrayList[position].getFilenameForecastWeather())
 
             weatherModelArrayList.removeAt(position)
             notifyDataSetChanged()

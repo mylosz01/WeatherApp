@@ -31,7 +31,8 @@ class BasicWeatherDataFragment : Fragment() {
             view.findViewById<TextView>(R.id.locationName).text = dataWeather.name
 
             //set image weather
-            view.findViewById<ImageView>(R.id.weather_image).setImageResource(Utils.getWeatherImageResource(dataWeather.weather!!.get(0)?.id!!.toInt()))
+            view.findViewById<ImageView>(R.id.weather_image).setImageResource(Utils.getWeatherImageResource(
+                dataWeather.weather!![0]?.id!!.toInt()))
 
             //set latitude name
             view.findViewById<TextView>(R.id.latitude).text = "Lat: ${dataWeather.coord!!.lat.toString()}"
