@@ -1,6 +1,8 @@
 package com.example.weatherapp
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -11,6 +13,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.weatherapp.Utils.RetrofitInstance
 import com.example.weatherapp.Utils.Utils
 import com.example.weatherapp.jsonManager.JsonManager
@@ -25,17 +32,24 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
     private val weatherViewModel : WeatherViewModel by viewModels<WeatherViewModel>()
     private lateinit var weatherAdapter: WeatherAdapter
 
+    companion object{
+        private const val PREFS_NAME = "com.example.weatherapp"
+        private const val WORKER_STARTED = "worker_started"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbarMain))
         supportActionBar?.title = ""
+
 
         // Make toast with net status info
         if (checkAccessToInternet(this)) {
@@ -44,6 +58,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
             Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
         }
 
+
         // RecycleView for favorite location
         val recyclerViewWeather = findViewById<RecyclerView>(R.id.favorite_location_RV)
         recyclerViewWeather.layoutManager =  LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
@@ -51,6 +66,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         // set weather adapter to recycleview
         recyclerViewWeather.adapter = WeatherAdapter(weatherViewModel.weatherLocationArray,this)
         weatherAdapter = recyclerViewWeather.adapter as WeatherAdapter
+
 
         // floating button for adding new favourite location
         findViewById<FloatingActionButton>(R.id.addLocationBtn).setOnClickListener{
@@ -65,6 +81,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
             }
         }
 
+
         // fetch current weather data from api
         if(checkAccessToInternet(this)){
             fetchCurrentWeatherData()
@@ -75,10 +92,35 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
             readFromStorageCurrentWeather()
             weatherAdapter.notifyDataSetChanged()
         }
+
+        // check by shared preferences if schedule worker started
+        val sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val workedStarted = sharedPreferences.getBoolean(WORKER_STARTED,false)
+
+        if(!workedStarted) {
+            Log.d("DEBUG","START SCHEDULE WORKER")
+            scheduleWeatherUpdates(sharedPreferences)
+        }
+    }
+
+
+    //schedule update weather
+    private fun scheduleWeatherUpdates(sharedPreferences: SharedPreferences){
+        val workRequest = OneTimeWorkRequestBuilder<WeatherWorker>()
+            .setInitialDelay(20,TimeUnit.SECONDS)
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniqueWork(
+            "WeatherWorker",
+            ExistingWorkPolicy.REPLACE,
+            workRequest
+        )
+
+        sharedPreferences.edit().putBoolean(WORKER_STARTED,true).apply()
     }
 
     //check file in array
-    fun checkFileLocationArray(weatherModelArray : ArrayList<WeatherModel>, checkWeatherFilename : String): Boolean {
+    private fun checkFileLocationArray(weatherModelArray : ArrayList<WeatherModel>, checkWeatherFilename : String): Boolean {
 
         for(weatherEle in weatherModelArray){
             if(weatherEle.getFilenameCurrentWeather() == checkWeatherFilename)
@@ -230,6 +272,10 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         if(fileListCurrentData.isNotEmpty()){
 
             for(filenameLocation: String in fileListCurrentData){
+
+                // if file currently in array skip
+                if(checkFileLocationArray(weatherViewModel.weatherLocationArray,filenameLocation))
+                    continue
 
                 val readWeatherData : CurrentWeatherResponseApi? = JsonManager.readJsonFromInternalStorageCurrentData(
                     applicationContext,filenameLocation)

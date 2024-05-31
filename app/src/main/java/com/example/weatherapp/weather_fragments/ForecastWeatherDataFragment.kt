@@ -47,7 +47,7 @@ class ForecastWeatherDataFragment : Fragment() {
 
                 val dateForecast : String = forecastData.dtTxt.toString()
 
-                Log.d("DEBUG","FORECAST TIME $dateForecast")
+                //Log.d("DEBUG","FORECAST TIME $dateForecast")
 
                 //format input date
                 val inputDate = LocalDateTime.parse(dateForecast,inputFormatter)
