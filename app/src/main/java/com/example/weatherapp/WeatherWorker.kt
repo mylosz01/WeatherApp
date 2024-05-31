@@ -9,9 +9,7 @@ import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.weatherapp.Utils.RetrofitInstance
-import com.example.weatherapp.Utils.Utils
 import com.example.weatherapp.jsonManager.JsonManager
-import com.example.weatherapp.weatherMainRV.WeatherModel
 import com.example.weatherapp.weatherResponseData.CurrentWeatherResponseApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -52,8 +50,6 @@ class WeatherWorker(appContext: Context, workerParams: WorkerParameters) : Worke
         if(fileListCurrentData.isNotEmpty()){
 
             for(filenameLocation: String in fileListCurrentData){
-
-                // if file currently in array skip
 
                 val readWeatherData : CurrentWeatherResponseApi? = JsonManager.readJsonFromInternalStorageCurrentData(
                     applicationContext,filenameLocation)
@@ -138,7 +134,7 @@ class WeatherWorker(appContext: Context, workerParams: WorkerParameters) : Worke
 
     private fun scheduleNextWork() {
         val workRequest = OneTimeWorkRequestBuilder<WeatherWorker>()
-            .setInitialDelay(5, TimeUnit.MINUTES)
+            .setInitialDelay(10, TimeUnit.MINUTES)
             .build()
 
         WorkManager.getInstance(applicationContext).enqueueUniqueWork(

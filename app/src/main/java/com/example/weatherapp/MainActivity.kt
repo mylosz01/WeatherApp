@@ -13,17 +13,15 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.weatherapp.Utils.RetrofitInstance
 import com.example.weatherapp.Utils.Utils
 import com.example.weatherapp.jsonManager.JsonManager
+import com.example.weatherapp.netMenager.NetManager.Companion.checkAccessToInternet
 import com.example.weatherapp.weatherMainRV.WeatherAdapter
 import com.example.weatherapp.weatherMainRV.WeatherModel
-import com.example.weatherapp.netMenager.NetManager.Companion.checkAccessToInternet
 import com.example.weatherapp.weatherResponseData.CurrentWeatherResponseApi
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
@@ -97,7 +95,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         val sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val workedStarted = sharedPreferences.getBoolean(WORKER_STARTED,false)
 
-        Log.d("DEBUG","Worker status:  ")
+        Log.d("DEBUG","Worker status: $workedStarted")
 
         if(!workedStarted) {
             Log.d("DEBUG","START SCHEDULE WORKER")
@@ -129,6 +127,15 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
                 return true
         }
         return  false
+    }
+
+    private fun checkFetchDataTime(dt: Int?): Boolean{
+        val currentTimeInMillis = System.currentTimeMillis()
+        val tenMinutesInMillis = 10 * 60 * 1000
+
+        val tenMinutesAgo = currentTimeInMillis - tenMinutesInMillis
+
+        return dt!!.toLong() < tenMinutesAgo
     }
 
     //function to start weather activity by click on item
@@ -163,12 +170,14 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
             for(filenameLocation: String in fileListCurrentData){
 
-                // if file currently in array skip
-                if(checkFileLocationArray(weatherViewModel.weatherLocationArray,filenameLocation))
-                    continue
-
                 val readWeatherData : CurrentWeatherResponseApi? = JsonManager.readJsonFromInternalStorageCurrentData(
                     applicationContext,filenameLocation)
+
+                //Log.d("DEBUG", "TIME OF FETCH: ${checkFetchDataTime(readWeatherData!!.dt)}")
+
+                // if file currently in array and time of fetch is less than ... skip
+                if(checkFileLocationArray(weatherViewModel.weatherLocationArray,filenameLocation) && checkFetchDataTime(readWeatherData!!.dt))
+                    continue
 
                 // delete current old data
                 JsonManager.deleteFileFromInternalStorage(
