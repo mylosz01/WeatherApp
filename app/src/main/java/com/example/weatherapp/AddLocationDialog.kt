@@ -100,8 +100,15 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
     // function to fetch current weather data
     private fun fetchCurrentWeather(cityName: String, units: String = "metric", latitude: Double = 0.0, longitude: Double = 0.0, context: Context){
         GlobalScope.launch(Dispatchers.IO) {
-            val response = try{
-                RetrofitInstance.api.getCurrentWeatherData(city = cityName, units = units, latitude = latitude, longitude = longitude)
+
+            // fetch current weather data
+            val responseCurrent = try{
+                RetrofitInstance.api.getCurrentWeatherData(
+                    city = cityName,
+                    units = units,
+                    latitude = latitude,
+                    longitude = longitude)
+
             }catch (e : IOException){
                 Toast.makeText(requireContext(),"app error", Toast.LENGTH_SHORT).show()
                 return@launch
@@ -110,24 +117,44 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
                 return@launch
             }
 
-            Log.d("DEBUG","CHECK RESPONSE: ${response.isSuccessful}")
+            // fetch forecast weather data
+            val responseForecast = try{
+                RetrofitInstance.api.getForecastWeatherData(
+                    city = cityName,
+                    units = units,
+                    latitude = latitude,
+                    longitude = longitude)
 
-            if(response.isSuccessful && response.body() != null){
+            }catch (e : IOException){
+                Toast.makeText(requireContext(),"app error", Toast.LENGTH_SHORT).show()
+                return@launch
+            }catch (e: HttpException){
+                Toast.makeText(requireContext(),"http error", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            Log.d("DEBUG","CHECK RES CURRENT: ${responseCurrent.isSuccessful}")
+            Log.d("DEBUG","CHECK RES FORECAST: ${responseForecast.isSuccessful}")
+
+            if(responseCurrent.isSuccessful && responseCurrent.body() != null &&
+                responseForecast.isSuccessful && responseForecast.body() != null){
+
                 withContext(Dispatchers.Main){
 
                     try{
-                        val cityCode = response.body()!!.id
+                        val cityCode = responseCurrent.body()!!.id
                         val filenameWeather = cityName.lowercase() + cityCode.toString()
 
                         // create new WeatherModel object and extract weather data
                         val weatherModelNew = WeatherModel(
-                            imageWeatherId = Utils.getWeatherImageResource(response.body()!!.weather?.get(0)?.id!!.toInt()),
+                            imageWeatherId = Utils.getWeatherImageResource(responseCurrent.body()!!.weather?.get(0)?.id!!.toInt()),
                             locationName = cityName,
-                            descriptionInfo = response.body()!!.weather?.get(0)?.description.toString(),
-                            humidityPercent = response.body()!!.main?.humidity!!.toDouble(),
-                            temperature = response.body()!!.main?.temp!!.toDouble(),
-                            windSpeed = response.body()!!.wind?.speed!!.toDouble(),
-                            filenameCurrentWeather = "weather_current_${filenameWeather}.json"
+                            descriptionInfo = responseCurrent.body()!!.weather?.get(0)?.description.toString(),
+                            humidityPercent = responseCurrent.body()!!.main?.humidity!!.toDouble(),
+                            temperature = responseCurrent.body()!!.main?.temp!!.toDouble(),
+                            windSpeed = responseCurrent.body()!!.wind?.speed!!.toDouble(),
+                            filenameCurrentWeather = "weather_current_${filenameWeather}.json",
+                            filenameForecastWeather = "weather_forecast_${filenameWeather}.json"
                         )
                         // add to list
                         itemList.add(weatherModelNew)
@@ -135,8 +162,16 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
                         adapterAC.notifyDataSetChanged()
 
                         //save current data weather
-                        JsonManager.saveJsonToInternalStorage(context,response.body()!!,"weather_current_${filenameWeather}.json")
+                        JsonManager.saveJsonToInternalStorageCurrentData(
+                            context,
+                            responseCurrent.body()!!,
+                            "weather_current_${filenameWeather}.json")
 
+                        //save forecast weather data
+                        JsonManager.saveJsonToInternalStorageForecastData(
+                            context,
+                            responseForecast.body()!!,
+                            "weather_forecast_${filenameWeather}.json")
                     }
                     catch (_: Exception){
                         return@withContext
