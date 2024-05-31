@@ -70,6 +70,10 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
             fetchCurrentWeatherData()
             weatherAdapter.notifyDataSetChanged()
         }
+        else{
+            readFromStorageCurrentWeather()
+            weatherAdapter.notifyDataSetChanged()
+        }
     }
 
     //function to start weather activity by click on item
@@ -128,7 +132,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
                         if(response.isSuccessful && response.body() != null){
                             withContext(Dispatchers.Main){
-                                Log.d("DEBUG","CREATE WEATHER MODEL")
+                                Log.d("DEBUG","FETCH $filenameLocation FROM API")
 
                                 val cityCode = response.body()!!.id
                                 val filenameWeather = "${response.body()!!.name.toString().lowercase()}${cityCode.toString()}"
@@ -155,6 +159,40 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private fun readFromStorageCurrentWeather(){
+        val fileListCurrentData = getFileCurrentDataList()
+        // get file with current data weather
+        Log.d("DEBUG","${fileListCurrentData.toMutableList()}")
+
+        // if list is not empty read from storage data
+        if(fileListCurrentData.isNotEmpty()){
+            for(filenameLocation: String in fileListCurrentData){
+
+                val readWeatherData : CurrentWeatherResponseApi? = JsonManager.readJsonFromInternalStorage(
+                    applicationContext,filenameLocation)
+
+                Log.d("DEBUG","READ $filenameLocation FROM STORAGE")
+
+                if(readWeatherData != null){
+
+                    val weatherModelNew = WeatherModel(
+                        imageWeatherId = Utils.getWeatherImageResource(readWeatherData.weather?.get(0)?.id!!.toInt()),
+                        locationName = readWeatherData.name.toString(),
+                        descriptionInfo = readWeatherData.weather[0]?.description.toString(),
+                        humidityPercent = readWeatherData.main?.humidity!!.toDouble(),
+                        temperature = readWeatherData.main.temp!!.toDouble(),
+                        windSpeed = readWeatherData.wind?.speed!!.toDouble(),
+                        filenameCurrentWeather = filenameLocation
+                    )
+
+                    // load weatherModel to list
+                    weatherViewModel.weatherLocationArray.add(weatherModelNew)
+                    weatherAdapter.notifyDataSetChanged()
                 }
             }
         }
