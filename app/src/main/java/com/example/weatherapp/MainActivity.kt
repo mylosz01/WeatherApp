@@ -7,10 +7,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
+import android.widget.PopupMenu
 import android.widget.Toast
-import android.widget.ToggleButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.ExistingWorkPolicy
@@ -91,6 +94,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
             readFromStorageCurrentWeather()
             weatherAdapter.notifyDataSetChanged()
         }
+
 
         // check by shared preferences if schedule worker started
         val sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -336,28 +340,6 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
     // Function to inflate menu bar options
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu,menu)
-
-        val toogleBtn = menu.findItem(R.id.switch_metrics_btn).actionView as ToggleButton
-        toogleBtn.text = "Metric"
-        val sharedPreferences = getSharedPreferences(PREFS_NAME,Context.MODE_PRIVATE)
-
-        toogleBtn.setOnCheckedChangeListener{_ , isChecked ->
-            if (isChecked){
-                toogleBtn.textOn = "Metric"
-                // set sharedpref units for metric
-                sharedPreferences.edit().putString(USER_UNITS,"metric").apply()
-                Toast.makeText(this,"Switch units to metric",Toast.LENGTH_SHORT).show()
-                Log.d("DEBUG","Use metric units")
-            }
-            else{
-                toogleBtn.textOff = "Imperial"
-                // set sharedpref units for metric
-                sharedPreferences.edit().putString(USER_UNITS,"imperial").apply()
-                Toast.makeText(this,"Switch units to imperial",Toast.LENGTH_SHORT).show()
-                Log.d("DEBUG","Use imperial units")
-            }
-        }
-
         return true
     }
 
@@ -365,6 +347,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Operate on option in toolbar
         return when (item.itemId) {
+            // select refresh btn
             R.id.refresh_data_btn -> {
                 //Log.d("DEBUG","Refresh the data")
                 if(checkAccessToInternet(applicationContext)){
@@ -375,10 +358,40 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
                 else{
                     Toast.makeText(this,"Can't refresh data due no connection",Toast.LENGTH_SHORT).show()
                 }
-
+                true
+            }
+            // select switch metrics btn
+            R.id.switch_metrics_btn -> {
+                showPopupMenu(findViewById(R.id.switch_metrics_btn))
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun showPopupMenu(view: View){
+        val popupMenu = PopupMenu(this, view)
+        popupMenu.menuInflater.inflate(R.menu.menu_popup, popupMenu.menu)
+
+        val switchBtn = findViewById<ActionMenuItemView>(R.id.switch_metrics_btn)
+
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.switch_unit_standard -> {
+                    switchBtn.text = "Standard"
+                    Toast.makeText(this, "Standard units", Toast.LENGTH_SHORT).show()
+                }
+                R.id.switch_unit_metric -> {
+                    switchBtn.text = "Metric"
+                    Toast.makeText(this, "Metric units", Toast.LENGTH_SHORT).show()
+                }
+                R.id.switch_unit_imperial -> {
+                    switchBtn.text = "Imperial"
+                    Toast.makeText(this, "Imperial units", Toast.LENGTH_SHORT).show()
+                }
+            }
+            true
+        }
+        popupMenu.show()
     }
 }
