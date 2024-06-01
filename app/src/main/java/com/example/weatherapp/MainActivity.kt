@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -375,18 +374,24 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
         val switchBtn = findViewById<ActionMenuItemView>(R.id.switch_metrics_btn)
 
+        val sharedPreferences = getSharedPreferences(PREFS_NAME,Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString(USER_UNITS,"").apply()
+
         popupMenu.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.switch_unit_standard -> {
                     switchBtn.text = "Standard"
+                    sharedPreferences.edit().putString(USER_UNITS,"standard").apply()
                     Toast.makeText(this, "Standard units", Toast.LENGTH_SHORT).show()
                 }
                 R.id.switch_unit_metric -> {
                     switchBtn.text = "Metric"
+                    sharedPreferences.edit().putString(USER_UNITS,"metric").apply()
                     Toast.makeText(this, "Metric units", Toast.LENGTH_SHORT).show()
                 }
                 R.id.switch_unit_imperial -> {
                     switchBtn.text = "Imperial"
+                    sharedPreferences.edit().putString(USER_UNITS,"imperial").apply()
                     Toast.makeText(this, "Imperial units", Toast.LENGTH_SHORT).show()
                 }
             }
