@@ -12,9 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.MainActivity
 import com.example.weatherapp.R
 import com.example.weatherapp.Utils.Utils
+import com.example.weatherapp.WeatherViewModel
 import com.example.weatherapp.jsonManager.JsonManager
 
-class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
+class WeatherAdapter(private val weatherModelArrayList: WeatherViewModel,
                      private var clickListener: MainActivity
     ) : RecyclerView.Adapter<WeatherAdapter.MyViewHolder>(){
 
@@ -26,7 +27,7 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val model: WeatherModel = weatherModelArrayList[position]
+        val model: WeatherModel = weatherModelArrayList.weatherLocationArray[position]
 
         val sharedPreferences = context.getSharedPreferences(MainActivity.PREFS_NAME, Context.MODE_PRIVATE)
         val userUnits = sharedPreferences.getString(MainActivity.USER_UNITS,null)
@@ -63,20 +64,26 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
         // clickListener to remove item from array
         holder.weatherView.findViewById<ImageButton>(R.id.remove_item_Btn).setOnClickListener{
             //Toast.makeText(holder.weatherView.context,"Usunięto pozycję numer "+ position,Toast.LENGTH_SHORT).show()
-            Log.d("DEBUG","Usunięto pozycje " + position)
+            Log.d("DEBUG","Usunięto pozycje " + holder.adapterPosition)
 
             //remove file with current and forecast weather data
-            JsonManager.deleteFileFromInternalStorage(context, weatherModelArrayList[position].getFilenameCurrentWeather())
-            JsonManager.deleteFileFromInternalStorage(context, weatherModelArrayList[position].getFilenameForecastWeather())
+            try {
+                JsonManager.deleteFileFromInternalStorage(context, weatherModelArrayList.weatherLocationArray[holder.adapterPosition].getFilenameCurrentWeather())
+                JsonManager.deleteFileFromInternalStorage(context, weatherModelArrayList.weatherLocationArray[holder.adapterPosition].getFilenameForecastWeather())
+            }
+            catch (e: Exception){
+                Log.d("DEBUG","Error when deleting file")
+            }
 
-            weatherModelArrayList.removeAt(position)
-            notifyItemRemoved(weatherModelArrayList.size)
+            weatherModelArrayList.weatherLocationArray.removeAt(holder.adapterPosition)
+            //notifyItemRangeRemoved(0,weatherModelArrayList.weatherLocationArray.size - 1)
+            notifyItemRemoved(holder.adapterPosition)
         }
     }
 
     //return size of arraylist
     override fun getItemCount(): Int {
-        return weatherModelArrayList.size
+        return weatherModelArrayList.weatherLocationArray.size
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){

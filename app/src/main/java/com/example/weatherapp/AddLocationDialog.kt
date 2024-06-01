@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment
 import com.example.weatherapp.Utils.RetrofitInstance
 import com.example.weatherapp.Utils.Utils
 import com.example.weatherapp.jsonManager.JsonManager
+import com.example.weatherapp.weatherMainRV.WeatherAdapter
 import com.example.weatherapp.weatherMainRV.WeatherModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,14 +25,14 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.lang.Exception
 
-class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogFragment() {
+class AddLocationDialog(private var weatherAdapter: WeatherAdapter,weatherDataArrayList: ArrayList<WeatherModel>) : DialogFragment() {
 
     private val itemList = weatherDataArrayList
     private lateinit var adapterAC: ArrayAdapter<String>
     private lateinit var insertLocationACTV: AutoCompleteTextView
     private lateinit var context: Context
 
-    constructor() : this(ArrayList<WeatherModel>())
+    //constructor() : this(ArrayList<WeatherModel>())
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -90,7 +91,7 @@ class AddLocationDialog(weatherDataArrayList: ArrayList<WeatherModel>) : DialogF
                 fetchCurrentWeather(cityName = cityName, units = "metric", latitude = latitude, longitude =  longitude, this.context)
             }
 
-            adapterAC.notifyDataSetChanged()
+            weatherAdapter.notifyItemRangeChanged(0,itemList.size - 1)
             dismiss()
         }
 

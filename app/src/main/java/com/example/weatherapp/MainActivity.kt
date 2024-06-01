@@ -34,7 +34,8 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
+class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener//, WeatherAdapter.DeleteListener
+{
 
     private val weatherViewModel : WeatherViewModel by viewModels<WeatherViewModel>()
     private lateinit var weatherAdapter: WeatherAdapter
@@ -64,7 +65,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         recyclerViewWeather.layoutManager =  LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
 
         // set weather adapter to recycleview
-        recyclerViewWeather.adapter = WeatherAdapter(weatherViewModel.weatherLocationArray,this)
+        recyclerViewWeather.adapter = WeatherAdapter(weatherViewModel,this)
         weatherAdapter = recyclerViewWeather.adapter as WeatherAdapter
 
 
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
             if (!checkAccessToInternet(this)) {
                 Toast.makeText(this, "No internet connection to add location", Toast.LENGTH_LONG).show()
             } else {
-                val dialog = AddLocationDialog(weatherViewModel.weatherLocationArray)
+                val dialog = AddLocationDialog(weatherAdapter,weatherViewModel.weatherLocationArray)
                 dialog.attachContext(applicationContext)
                 dialog.show(supportFragmentManager,"Add location")
             }
@@ -85,17 +86,17 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         // fetch current weather data from api
         if(checkAccessToInternet(this)){
             fetchCurrentWeatherData()
-            weatherAdapter.notifyItemRangeChanged(0,weatherViewModel.weatherLocationArray.size)
+            weatherAdapter.notifyItemRangeInserted(0,weatherViewModel.weatherLocationArray.size - 1)
         }
         else{
             // read stored weather data
             readFromStorageCurrentWeather()
-            weatherAdapter.notifyItemRangeChanged(0,weatherViewModel.weatherLocationArray.size)
+            weatherAdapter.notifyItemRangeInserted(0,weatherViewModel.weatherLocationArray.size - 1)
         }
 
 
         // check by shared preferences if schedule worker started
-        val sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         val workedStarted = sharedPreferences.getBoolean(WORKER_STARTED,false)
 
         Log.d("DEBUG","Worker status: $workedStarted")
@@ -273,7 +274,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
                                 // load weatherModel to list
                                 weatherViewModel.weatherLocationArray.add(weatherModelNew)
-                                weatherAdapter.notifyItemInserted(weatherViewModel.weatherLocationArray.size - 1)
+                                weatherAdapter.notifyDataSetChanged()
 
                                 //save fresh current data
                                 JsonManager.saveJsonToInternalStorageCurrentData(
@@ -329,7 +330,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
                     // load weatherModel to list
                     weatherViewModel.weatherLocationArray.add(weatherModelNew)
-                    weatherAdapter.notifyItemInserted(weatherViewModel.weatherLocationArray.size - 1)
+                    weatherAdapter.notifyDataSetChanged()
                 }
             }
         }
@@ -355,7 +356,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
                 //Log.d("DEBUG","Refresh the data")
                 if(checkAccessToInternet(applicationContext)){
                     fetchCurrentWeatherData()
-                    weatherAdapter.notifyItemRangeChanged(0,weatherViewModel.weatherLocationArray.size)
+                    weatherAdapter.notifyItemRangeChanged(0,weatherViewModel.weatherLocationArray.size - 1)
                     Toast.makeText(this,"Refresh the data",Toast.LENGTH_SHORT).show()
                 }
                 else{
@@ -398,7 +399,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
                 }
             }
             fetchCurrentWeatherData()
-            weatherAdapter.notifyItemRangeChanged(0,weatherViewModel.weatherLocationArray.size)
+            weatherAdapter.notifyItemRangeChanged(0,weatherViewModel.weatherLocationArray.size - 1)
             true
         }
         popupMenu.show()
