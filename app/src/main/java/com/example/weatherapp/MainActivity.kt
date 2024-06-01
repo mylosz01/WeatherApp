@@ -40,9 +40,9 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
     private lateinit var weatherAdapter: WeatherAdapter
 
     companion object{
-        private const val PREFS_NAME = "com.example.weatherapp"
+        const val PREFS_NAME = "com.example.weatherapp"
         private const val WORKER_STARTED = "worker_started"
-        private const val USER_UNITS = "metric"
+        const val USER_UNITS = "metric"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -273,7 +273,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
                                 // load weatherModel to list
                                 weatherViewModel.weatherLocationArray.add(weatherModelNew)
-                                weatherAdapter.notifyDataSetChanged()
+                                weatherAdapter.notifyItemInserted(weatherViewModel.weatherLocationArray.size - 1)
 
                                 //save fresh current data
                                 JsonManager.saveJsonToInternalStorageCurrentData(
@@ -329,7 +329,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
 
                     // load weatherModel to list
                     weatherViewModel.weatherLocationArray.add(weatherModelNew)
-                    weatherAdapter.notifyDataSetChanged()
+                    weatherAdapter.notifyItemInserted(weatherViewModel.weatherLocationArray.size - 1)
                 }
             }
         }
@@ -397,6 +397,8 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
                     Toast.makeText(this, "Imperial units", Toast.LENGTH_SHORT).show()
                 }
             }
+            fetchCurrentWeatherData()
+            weatherAdapter.notifyDataSetChanged()
             true
         }
         popupMenu.show()

@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.MainActivity
 import com.example.weatherapp.R
+import com.example.weatherapp.Utils.Utils
 import com.example.weatherapp.jsonManager.JsonManager
 
 class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
@@ -27,12 +28,31 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val model: WeatherModel = weatherModelArrayList[position]
 
+        val sharedPreferences = context.getSharedPreferences(MainActivity.PREFS_NAME, Context.MODE_PRIVATE)
+        val userUnits = sharedPreferences.getString(MainActivity.USER_UNITS,null)
+
         holder.weatherImage.setImageResource(model.getImageWeather())
         holder.weatherLocation.text = "" + model.getLocationName()
         holder.weatherDescription.text = model.getDescriptionInfo()
-        holder.weatherTemperature.text = model.getTemperature().toString() + "°"
-        holder.weatherRainPercent.text = model.getHumidityPercent().toString() + " %"
-        holder.weatherWindSpeed.text = model.getWindSpeed().toString() + " m/s"
+
+        if(userUnits == "imperial"){
+            holder.weatherTemperature.text = String.format("%.2f",Utils.convertCelciusToFahrenheit(model.getTemperature())) + " °F"
+        }
+        else if(userUnits == "standard"){
+            holder.weatherTemperature.text =  String.format("%.2f",Utils.convertCelciusToKelvin(model.getTemperature())) + " K"
+        }
+        else{
+            holder.weatherTemperature.text = model.getTemperature().toString() + " °C"
+        }
+
+        holder.weatherHumidity.text = model.getHumidityPercent().toString() + " %"
+
+        if(userUnits == "imperial"){
+            holder.weatherWindSpeed.text =  String.format("%.2f",Utils.convertMeterSpeedToMiles(model.getWindSpeed())) + " m/h"
+        }
+        else{
+            holder.weatherWindSpeed.text = model.getWindSpeed().toString() + " m/s"
+        }
 
         // click on item to see more information
         holder.weatherView.setOnClickListener {
@@ -50,7 +70,7 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
             JsonManager.deleteFileFromInternalStorage(context, weatherModelArrayList[position].getFilenameForecastWeather())
 
             weatherModelArrayList.removeAt(position)
-            notifyDataSetChanged()
+            notifyItemRemoved(weatherModelArrayList.size)
         }
     }
 
@@ -64,7 +84,7 @@ class WeatherAdapter(private val weatherModelArrayList: ArrayList<WeatherModel>,
         val weatherLocation: TextView = itemView.findViewById(R.id.card_view_location)
         val weatherDescription: TextView = itemView.findViewById(R.id.card_view_description)
         val weatherTemperature: TextView = itemView.findViewById(R.id.card_view_temperature)
-        val weatherRainPercent: TextView = itemView.findViewById(R.id.card_view_humidity_percent)
+        val weatherHumidity: TextView = itemView.findViewById(R.id.card_view_humidity_percent)
         val weatherWindSpeed: TextView = itemView.findViewById(R.id.card_view_wind_speed)
         val weatherView = itemView
     }
