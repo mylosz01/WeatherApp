@@ -59,7 +59,6 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
             Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
         }
 
-
         // RecycleView for favorite location
         val recyclerViewWeather = findViewById<RecyclerView>(R.id.favorite_location_RV)
         recyclerViewWeather.layoutManager =  LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
@@ -339,6 +338,11 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
     // Function to inflate menu bar options
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu,menu)
+
+        val switchMetricsBtn = menu.findItem(R.id.switch_metrics_btn)
+        val sharedPreferences = getSharedPreferences(PREFS_NAME,Context.MODE_PRIVATE)
+        val userUnits = sharedPreferences.getString(USER_UNITS, "metric")
+        switchMetricsBtn?.title = userUnits
         return true
     }
 
@@ -373,9 +377,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         popupMenu.menuInflater.inflate(R.menu.menu_popup, popupMenu.menu)
 
         val switchBtn = findViewById<ActionMenuItemView>(R.id.switch_metrics_btn)
-
         val sharedPreferences = getSharedPreferences(PREFS_NAME,Context.MODE_PRIVATE)
-        sharedPreferences.edit().putString(USER_UNITS,"").apply()
 
         popupMenu.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
