@@ -1,5 +1,6 @@
 package com.example.weatherapp.weather_fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.example.weatherapp.MainActivity
 import com.example.weatherapp.R
 import com.example.weatherapp.Utils.Utils
 import com.example.weatherapp.weatherResponseData.CurrentWeatherResponseApi
@@ -25,6 +27,9 @@ class BasicWeatherDataFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_basic_weather_data, container, false)
 
         val dataWeather = arguments?.getSerializable("data") as? CurrentWeatherResponseApi
+
+        val sharedPreferences = context?.getSharedPreferences(MainActivity.PREFS_NAME, Context.MODE_PRIVATE)
+        val userUnits = sharedPreferences?.getString(MainActivity.USER_UNITS,"metric")
 
         if(dataWeather != null){
             //set location name
@@ -47,10 +52,20 @@ class BasicWeatherDataFragment : Fragment() {
             view.findViewById<TextView>(R.id.weather_description).text = dataWeather.weather?.get(0)?.description.toString()
 
             //set temperature
-            view.findViewById<TextView>(R.id.temperature).text = dataWeather.main?.temp.toString() + " °C"
+            val temperatureTextView = view.findViewById<TextView>(R.id.temperature)
+
+            if(userUnits == "imperial"){
+                temperatureTextView.text = String.format("%.2f",Utils.convertCelciusToFahrenheit(dataWeather.main?.temp!!)) + " °F"
+            }
+            else if(userUnits == "standard"){
+                temperatureTextView.text =  String.format("%.2f",Utils.convertCelciusToKelvin(dataWeather.main?.temp!!)) + " K"
+            }
+            else{
+                temperatureTextView.text = dataWeather.main?.temp.toString() + " °C"
+            }
 
             //set pressure
-            view.findViewById<TextView>(R.id.pressure).text = dataWeather.main?.pressure.toString() + " Pa"
+            view.findViewById<TextView>(R.id.pressure).text = dataWeather.main?.pressure.toString() + " hPa"
         }
 
         return view

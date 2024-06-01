@@ -1,5 +1,6 @@
 package com.example.weatherapp.weather_fragments
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.weatherapp.MainActivity
 import com.example.weatherapp.R
+import com.example.weatherapp.Utils.Utils
 import com.example.weatherapp.weatherResponseData.CurrentWeatherResponseApi
 
 class AdvancedWeatherDataFragment : Fragment() {
@@ -21,12 +24,22 @@ class AdvancedWeatherDataFragment : Fragment() {
 
         val dataWeather = arguments?.getSerializable("data") as? CurrentWeatherResponseApi
 
+        val sharedPreferences = context?.getSharedPreferences(MainActivity.PREFS_NAME, Context.MODE_PRIVATE)
+        val userUnits = sharedPreferences?.getString(MainActivity.USER_UNITS,"metric")
+
         if(dataWeather != null){
             //set rain percent
             view.findViewById<TextView>(R.id.rain_percent).text = (dataWeather.rain?.h.toString().toDoubleOrNull() ?: 0.0).toString()
 
             //set wind speed
-            view.findViewById<TextView>(R.id.wind_speed).text = "${dataWeather.wind?.speed} m/s"
+            val windSpeedTextView = view.findViewById<TextView>(R.id.wind_speed)
+
+            if(userUnits == "imperial"){
+                windSpeedTextView.text =  String.format("%.2f", Utils.convertMeterSpeedToMiles(dataWeather.wind?.speed!!)) + " m/h"
+            }
+            else{
+                windSpeedTextView.text = "${dataWeather.wind?.speed} m/s"
+            }
 
             //set humidity
             view.findViewById<TextView>(R.id.humidity).text = "${dataWeather.main?.humidity} %"

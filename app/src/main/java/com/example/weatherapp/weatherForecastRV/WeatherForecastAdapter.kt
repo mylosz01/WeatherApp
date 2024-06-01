@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.weatherapp.MainActivity
 import com.example.weatherapp.R
+import com.example.weatherapp.Utils.Utils
 
 class WeatherForecastAdapter(private val weatherForecastModelArrayList: ArrayList<WeatherForecastModel>
     ) : RecyclerView.Adapter<WeatherForecastAdapter.MyForecastViewHolder>(){
@@ -22,7 +24,18 @@ class WeatherForecastAdapter(private val weatherForecastModelArrayList: ArrayLis
     override fun onBindViewHolder(holder: MyForecastViewHolder, position: Int) {
         val model: WeatherForecastModel = weatherForecastModelArrayList[position]
 
-        holder.weatherForecastTemperature.text = "${model.getForecastTemperature()} °C"
+        val sharedPreferences = context.getSharedPreferences(MainActivity.PREFS_NAME, Context.MODE_PRIVATE)
+        val userUnits = sharedPreferences.getString(MainActivity.USER_UNITS,null)
+
+        if(userUnits == "imperial"){
+            holder.weatherForecastTemperature.text = String.format("%.2f", Utils.convertCelciusToFahrenheit(model.getForecastTemperature())) + " °F"
+        }
+        else if(userUnits == "standard"){
+            holder.weatherForecastTemperature.text =  String.format("%.2f", Utils.convertCelciusToKelvin(model.getForecastTemperature())) + " K"
+        }
+        else{
+            holder.weatherForecastTemperature.text = model.getForecastTemperature().toString() + " °C"
+        }
         holder.weatherForecastTimeStamp.text =  model.getForecastTimeStamp()
         holder.weatherForecastImage.setImageResource(model.getForecastImage())
     }
