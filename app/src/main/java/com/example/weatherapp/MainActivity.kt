@@ -85,12 +85,12 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         // fetch current weather data from api
         if(checkAccessToInternet(this)){
             fetchCurrentWeatherData()
-            weatherAdapter.notifyDataSetChanged()
+            weatherAdapter.notifyItemRangeChanged(0,weatherViewModel.weatherLocationArray.size)
         }
         else{
             // read stored weather data
             readFromStorageCurrentWeather()
-            weatherAdapter.notifyDataSetChanged()
+            weatherAdapter.notifyItemRangeChanged(0,weatherViewModel.weatherLocationArray.size)
         }
 
 
@@ -355,7 +355,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
                 //Log.d("DEBUG","Refresh the data")
                 if(checkAccessToInternet(applicationContext)){
                     fetchCurrentWeatherData()
-                    weatherAdapter.notifyDataSetChanged()
+                    weatherAdapter.notifyItemRangeChanged(0,weatherViewModel.weatherLocationArray.size)
                     Toast.makeText(this,"Refresh the data",Toast.LENGTH_SHORT).show()
                 }
                 else{
@@ -382,23 +382,23 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener {
         popupMenu.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.switch_unit_standard -> {
-                    switchBtn.text = "Standard"
+                    switchBtn.text = getString(R.string.standard)
                     sharedPreferences.edit().putString(USER_UNITS,"standard").apply()
                     Toast.makeText(this, "Standard units", Toast.LENGTH_SHORT).show()
                 }
                 R.id.switch_unit_metric -> {
-                    switchBtn.text = "Metric"
+                    switchBtn.text = getString(R.string.metric)
                     sharedPreferences.edit().putString(USER_UNITS,"metric").apply()
                     Toast.makeText(this, "Metric units", Toast.LENGTH_SHORT).show()
                 }
                 R.id.switch_unit_imperial -> {
-                    switchBtn.text = "Imperial"
+                    switchBtn.text = getString(R.string.imperial)
                     sharedPreferences.edit().putString(USER_UNITS,"imperial").apply()
                     Toast.makeText(this, "Imperial units", Toast.LENGTH_SHORT).show()
                 }
             }
             fetchCurrentWeatherData()
-            weatherAdapter.notifyDataSetChanged()
+            weatherAdapter.notifyItemRangeChanged(0,weatherViewModel.weatherLocationArray.size)
             true
         }
         popupMenu.show()

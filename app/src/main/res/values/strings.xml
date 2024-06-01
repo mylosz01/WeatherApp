@@ -6,4 +6,7 @@
     <string name="cancel_text">Cancel</string>
     <string name="add_text">Add</string>
     <string name="add_your_location_text">Add your location</string>
+    <string name="standard">Standard</string>
+    <string name="metric">Metric</string>
+    <string name="imperial">Imperial</string>
 </resources>
