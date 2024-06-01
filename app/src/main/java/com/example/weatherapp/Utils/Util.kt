@@ -36,4 +36,18 @@ object Utils {
         val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
         return dateTime.format(formatter)
     }
+
+    fun convertCelciusToKelvin(temperature : Double): Double{
+        return temperature + 273.15
+    }
+
+    fun convertCelciusToFahrenheit(temperature : Double): Double{
+        return temperature * 9/5 + 32
+    }
+
+    fun convertMeterSpeedToMiles(metersPerSecond: Double): Double {
+        val milesPerHour = metersPerSecond * 2.23694
+        return milesPerHour
+    }
+
 }
