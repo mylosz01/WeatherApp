@@ -330,7 +330,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener//, Weathe
 
                     // load weatherModel to list
                     weatherViewModel.weatherLocationArray.add(weatherModelNew)
-                    weatherAdapter.notifyDataSetChanged()
+                    weatherAdapter.notifyItemInserted(weatherViewModel.weatherLocationArray.indexOf(weatherModelNew))
                 }
             }
         }
@@ -398,7 +398,12 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener//, Weathe
                     Toast.makeText(this, "Imperial units", Toast.LENGTH_SHORT).show()
                 }
             }
-            fetchCurrentWeatherData()
+
+            if(checkAccessToInternet(this)) {
+                fetchCurrentWeatherData()
+            }else{
+                readFromStorageCurrentWeather()
+            }
             weatherAdapter.notifyItemRangeChanged(0,weatherViewModel.weatherLocationArray.size - 1)
             true
         }

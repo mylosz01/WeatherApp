@@ -43,8 +43,8 @@ class AddLocationDialog(private var weatherAdapter: WeatherAdapter,weatherDataAr
         if(dialog != null && retainInstance){
             dialog!!.setDismissMessage(null)
         }
-        super.onDestroyView()
         weatherAdapter.notifyDataSetChanged()
+        super.onDestroyView()
     }
 
     override fun onCreateView(
