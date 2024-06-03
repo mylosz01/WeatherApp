@@ -34,9 +34,17 @@ class AddLocationDialog(private var weatherAdapter: WeatherAdapter,weatherDataAr
 
     //constructor() : this(ArrayList<WeatherModel>())
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
+
     override fun onDestroyView() {
+        if(dialog != null && retainInstance){
+            dialog!!.setDismissMessage(null)
+        }
         super.onDestroyView()
-        adapterAC.notifyDataSetChanged()
+        weatherAdapter.notifyDataSetChanged()
     }
 
     override fun onCreateView(
