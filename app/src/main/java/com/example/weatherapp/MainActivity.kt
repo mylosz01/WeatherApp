@@ -404,7 +404,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener//, Weathe
             }else{
                 readFromStorageCurrentWeather()
             }
-            weatherAdapter.notifyItemRangeChanged(0,weatherViewModel.weatherLocationArray.size - 1)
+            weatherAdapter.notifyItemRangeChanged(0,weatherViewModel.weatherLocationArray.size)
             true
         }
         popupMenu.show()
