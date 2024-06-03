@@ -157,10 +157,11 @@ class AddLocationDialog(private var weatherAdapter: WeatherAdapter,weatherDataAr
                             filenameCurrentWeather = "weather_current_${filenameWeather}.json",
                             filenameForecastWeather = "weather_forecast_${filenameWeather}.json"
                         )
+
                         // add to list
                         itemList.add(weatherModelNew)
                         Log.d("DEBUG","CITY $cityName added")
-                        adapterAC.notifyDataSetChanged()
+                        weatherAdapter.notifyItemInserted(itemList.indexOf(weatherModelNew))
 
                         //save current data weather
                         JsonManager.saveJsonToInternalStorageCurrentData(

@@ -76,7 +76,6 @@ class WeatherAdapter(private val weatherModelArrayList: WeatherViewModel,
             }
 
             weatherModelArrayList.weatherLocationArray.removeAt(holder.adapterPosition)
-            //notifyItemRangeRemoved(0,weatherModelArrayList.weatherLocationArray.size - 1)
             notifyItemRemoved(holder.adapterPosition)
         }
     }
