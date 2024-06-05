@@ -2,6 +2,8 @@ package com.example.weatherapp
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -62,7 +64,7 @@ class AddLocationDialog(private var weatherAdapter: WeatherAdapter,weatherDataAr
         insertLocationACTV.setAdapter(adapterAC)
 
         // set listener to fetch suggestion
-        /*insertLocationACTV.addTextChangedListener(object : TextWatcher {
+        insertLocationACTV.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 //Log.d("DEBUG","On Text Changed Search Location")
@@ -72,7 +74,7 @@ class AddLocationDialog(private var weatherAdapter: WeatherAdapter,weatherDataAr
                 }
             }
             override fun afterTextChanged(s: Editable?) {}
-        })*/
+        })
 
         // cancel adding location
         rootView.findViewById<Button>(R.id.cancel_location_button).setOnClickListener{
@@ -146,11 +148,11 @@ class AddLocationDialog(private var weatherAdapter: WeatherAdapter,weatherDataAr
             Log.d("DEBUG","CHECK RES FORECAST: ${responseForecast.isSuccessful}")
 
             if(responseCurrent.isSuccessful && responseCurrent.body() != null &&
-                responseForecast.isSuccessful && responseForecast.body() != null){
+                responseForecast.isSuccessful && responseForecast.body() != null) {
 
-                withContext(Dispatchers.Main){
+                withContext(Dispatchers.Main) {
 
-                    try{
+                    try {
                         val cityCode = responseCurrent.body()!!.id
                         val filenameWeather = cityName.lowercase() + cityCode.toString()
 
@@ -168,7 +170,7 @@ class AddLocationDialog(private var weatherAdapter: WeatherAdapter,weatherDataAr
 
                         // add to list
                         itemList.add(weatherModelNew)
-                        Log.d("DEBUG","CITY $cityName added")
+                        Log.d("DEBUG", "CITY $cityName added")
                         weatherAdapter.notifyItemInserted(itemList.indexOf(weatherModelNew))
 
                         //save current data weather
@@ -195,7 +197,7 @@ class AddLocationDialog(private var weatherAdapter: WeatherAdapter,weatherDataAr
         CoroutineScope(Dispatchers.IO).launch {
             val response = RetrofitInstance.api.getCitySuggestions(query)
             if (response.isSuccessful && response.body() != null) {
-                val suggestions = response.body()!!.map { "${it.name}, ${it.country}, ${String.format("%.2f",it.lat).toDouble()} / ${String.format("%.2f",it.lon).toDouble()}" }
+                val suggestions = response.body()!!.map { "${it.name}, ${it.country}, ${String.format("%.2f",it.lat).replace(',','.').toDouble()} / ${String.format("%.2f",it.lon).replace(',','.').toDouble()}" }
                 withContext(Dispatchers.Main) {
                     adapterAC.clear()
                     adapterAC.addAll(suggestions)
