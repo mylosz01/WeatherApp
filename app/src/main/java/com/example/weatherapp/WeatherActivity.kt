@@ -32,7 +32,7 @@ class WeatherActivity : AppCompatActivity() {
             putString("data",weatherCurrentFilename)
         }
 
-        viewPager = findViewById<ViewPager2>(R.id.viewPagerFragment)
+        viewPager = findViewById(R.id.viewPagerFragment)
 
         val fragments = listOf(BasicWeatherDataFragment().apply {arguments = tempBundle},
             AdvancedWeatherDataFragment().apply {arguments = tempBundle},
@@ -44,27 +44,5 @@ class WeatherActivity : AppCompatActivity() {
 
         adapter = SwipePagerAdapter(this,fragments)
         viewPager.adapter = adapter
-
-        /*val basicWeather = BasicWeatherDataFragment().apply {
-            arguments = tempBundle
-        }
-
-        val advancedWeather = AdvancedWeatherDataFragment().apply {
-            arguments = tempBundle
-        }
-
-        val forecastWeather = ForecastWeatherDataFragment().apply {
-            arguments = Bundle().apply {
-                putSerializable("forecast",weatherForecastFilename)
-            }
-        }
-
-        if(savedInstanceState == null){
-            supportFragmentManager.commit {
-                replace(R.id.basic_weather_data, basicWeather)
-                replace(R.id.advanced_weather_data, advancedWeather)
-                replace(R.id.forecast_weather_data, forecastWeather)
-            }
-        }*/
     }
 }
