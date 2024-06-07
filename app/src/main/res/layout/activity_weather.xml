@@ -8,34 +8,13 @@
     android:layout_height="match_parent"
     tools:context=".WeatherActivity">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/basic_weather_data"
-        android:layout_width="match_parent"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPagerFragment"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1"
-        android:name="com.example.weatherapp.weather_fragments.BasicWeatherDataFragment"/>
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/advanced_weather_data"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/basic_weather_data"
-        app:layout_constraintVertical_weight="1"
-        android:name="com.example.weatherapp.weather_fragments.AdvancedWeatherDataFragment"/>
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/forecast_weather_data"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/advanced_weather_data"
-        app:layout_constraintVertical_weight="1"
-        android:name="com.example.weatherapp.weather_fragments.ForecastWeatherDataFragment"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,14 +3,15 @@ package com.example.weatherapp
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.commit
-import com.example.weatherapp.weatherResponseData.CurrentWeatherResponseApi
-import com.example.weatherapp.weatherResponseData.ForecastWeatherResponseApi
+import androidx.viewpager2.widget.ViewPager2
 import com.example.weatherapp.weather_fragments.AdvancedWeatherDataFragment
 import com.example.weatherapp.weather_fragments.BasicWeatherDataFragment
 import com.example.weatherapp.weather_fragments.ForecastWeatherDataFragment
 
 class WeatherActivity : AppCompatActivity() {
+
+    private lateinit var viewPager: ViewPager2
+    private lateinit var adapter: SwipePagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +32,20 @@ class WeatherActivity : AppCompatActivity() {
             putString("data",weatherCurrentFilename)
         }
 
-        val basicWeather = BasicWeatherDataFragment().apply {
+        viewPager = findViewById<ViewPager2>(R.id.viewPagerFragment)
+
+        val fragments = listOf(BasicWeatherDataFragment().apply {arguments = tempBundle},
+            AdvancedWeatherDataFragment().apply {arguments = tempBundle},
+            ForecastWeatherDataFragment().apply {
+                arguments = Bundle().apply {
+                    putString("forecast",weatherForecastFilename)
+                }
+            })
+
+        adapter = SwipePagerAdapter(this,fragments)
+        viewPager.adapter = adapter
+
+        /*val basicWeather = BasicWeatherDataFragment().apply {
             arguments = tempBundle
         }
 
@@ -51,6 +65,6 @@ class WeatherActivity : AppCompatActivity() {
                 replace(R.id.advanced_weather_data, advancedWeather)
                 replace(R.id.forecast_weather_data, forecastWeather)
             }
-        }
+        }*/
     }
 }
