@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.R
 import com.example.weatherapp.Utils.Utils
+import com.example.weatherapp.jsonManager.JsonManager
 import com.example.weatherapp.weatherForecastRV.WeatherForecastAdapter
 import com.example.weatherapp.weatherForecastRV.WeatherForecastModel
 import com.example.weatherapp.weatherResponseData.ForecastWeatherResponseApi
@@ -27,45 +28,50 @@ class ForecastWeatherDataFragment : Fragment() {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_forecast_weather_data, container, false)
 
-        val dataWeather = arguments?.getSerializable("forecast") as? ForecastWeatherResponseApi
+        val dataWeatherFilename = arguments?.getString("forecast")
 
-        if(dataWeather != null) {
-            Log.d("DEBUG","FORECAST DATA RECEIVE")
-            //Adding recycleView
-            forecastRecycleView = view.findViewById(R.id.forecast_weather_RV)
-            forecastRecycleView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL,false)
+        if(dataWeatherFilename != null){
 
-            val forecastDataArray = ArrayList<WeatherForecastModel>()
+            val dataWeather = JsonManager.readJsonFromInternalStorageForecastData(requireContext(),dataWeatherFilename)
 
-            //input format
-            val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            if(dataWeather != null) {
+                Log.d("DEBUG","FORECAST DATA RECEIVE")
+                //Adding recycleView
+                forecastRecycleView = view.findViewById(R.id.forecast_weather_RV)
+                forecastRecycleView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL,false)
 
-            //create formatter for date
-            val formatter = DateTimeFormatter.ofPattern("dd MMM, ha")
+                val forecastDataArray = ArrayList<WeatherForecastModel>()
 
-            for(forecastData in dataWeather.list!!){
+                //input format
+                val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
-                val dateForecast : String = forecastData.dtTxt.toString()
+                //create formatter for date
+                val formatter = DateTimeFormatter.ofPattern("dd MMM, ha")
 
-                //Log.d("DEBUG","FORECAST TIME $dateForecast")
+                for(forecastData in dataWeather.list!!){
 
-                //format input date
-                val inputDate = LocalDateTime.parse(dateForecast,inputFormatter)
+                    val dateForecast : String = forecastData.dtTxt.toString()
 
-                //parse date using formatter
-                val date = inputDate.format(formatter)
+                    //Log.d("DEBUG","FORECAST TIME $dateForecast")
 
-                // create object ForecastModel to store info
-                val forecastModel = WeatherForecastModel(
-                    forecastTimeStamp = date,
-                    forecastImageInt = Utils.getWeatherImageResource(forecastData.weather?.get(0)?.id!!.toInt()),
-                    forecastTemperature = forecastData.main?.temp!!.toDouble()
-                )
+                    //format input date
+                    val inputDate = LocalDateTime.parse(dateForecast,inputFormatter)
 
-                forecastDataArray.add(forecastModel)
+                    //parse date using formatter
+                    val date = inputDate.format(formatter)
+
+                    // create object ForecastModel to store info
+                    val forecastModel = WeatherForecastModel(
+                        forecastTimeStamp = date,
+                        forecastImageInt = Utils.getWeatherImageResource(forecastData.weather?.get(0)?.id!!.toInt()),
+                        forecastTemperature = forecastData.main?.temp!!.toDouble()
+                    )
+
+                    forecastDataArray.add(forecastModel)
+                }
+
+                forecastRecycleView.adapter = WeatherForecastAdapter(forecastDataArray)
             }
-
-            forecastRecycleView.adapter = WeatherForecastAdapter(forecastDataArray)
         }
 
         return view

@@ -16,10 +16,11 @@ class WeatherActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weather)
 
-        val weatherCurrentData = intent.getSerializableExtra("CurrentWeatherData") as? CurrentWeatherResponseApi
-        val weatherForecastData = intent.getSerializableExtra("ForecastWeatherData") as? ForecastWeatherResponseApi
+        // get filename of weather data
+        val weatherCurrentFilename = intent.getStringExtra("CurrentWeatherData")
+        val weatherForecastFilename = intent.getStringExtra("ForecastWeatherData")
 
-        if(weatherCurrentData == null){
+        if(weatherCurrentFilename == null){
             Log.d("DEBUG","weatherCurrentData null")
         }
         else{
@@ -27,7 +28,7 @@ class WeatherActivity : AppCompatActivity() {
         }
 
         val tempBundle = Bundle().apply {
-            putSerializable("data",weatherCurrentData)
+            putString("data",weatherCurrentFilename)
         }
 
         val basicWeather = BasicWeatherDataFragment().apply {
@@ -40,7 +41,7 @@ class WeatherActivity : AppCompatActivity() {
 
         val forecastWeather = ForecastWeatherDataFragment().apply {
             arguments = Bundle().apply {
-                putSerializable("forecast",weatherForecastData)
+                putSerializable("forecast",weatherForecastFilename)
             }
         }
 

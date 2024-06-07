@@ -34,7 +34,7 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener//, WeatherAdapter.DeleteListener
+class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener
 {
 
     private val weatherViewModel : WeatherViewModel by viewModels<WeatherViewModel>()
@@ -94,7 +94,6 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener//, Weathe
             weatherAdapter.notifyItemRangeInserted(0,weatherViewModel.weatherLocationArray.size - 1)
         }
 
-
         // check by shared preferences if schedule worker started
         val sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         val workedStarted = sharedPreferences.getBoolean(WORKER_STARTED,false)
@@ -105,6 +104,16 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener//, Weathe
             Log.d("DEBUG","START SCHEDULE WORKER")
             scheduleWeatherUpdates(sharedPreferences)
         }
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //cancel work after close app
+        WorkManager.getInstance(this).cancelUniqueWork("WeatherWorker")
+        //set in SharedPreferences that worker stopped
+        val sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        sharedPreferences.edit().putBoolean(WORKER_STARTED,false).apply()
     }
 
 
@@ -150,17 +159,11 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.ClickListener//, Weathe
                 Log.d("DEBUG", " FILE NAME : ${weatherModel.getFilenameCurrentWeather()} ")
                 putExtra(
                     "CurrentWeatherData",
-                    JsonManager.readJsonFromInternalStorageCurrentData(
-                        applicationContext,
-                        weatherModel.getFilenameCurrentWeather()
-                    )!!
+                    weatherModel.getFilenameCurrentWeather()
                 )
                 putExtra(
                     "ForecastWeatherData",
-                    JsonManager.readJsonFromInternalStorageForecastData(
-                        applicationContext,
-                        weatherModel.getFilenameForecastWeather()
-                    )!!
+                    weatherModel.getFilenameForecastWeather()
                 )
             }
             startActivity(weatherIntent)
